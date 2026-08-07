@@ -356,6 +356,77 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   .tbl-viz{order:-1; max-height:36vh;}
 }
 
+/* ── Planetary Boundaries ─────────────────────────────────────────────────── */
+.slide[data-type="pbound"]{background:linear-gradient(160deg,#f6faf7,#e9f1ec);}
+.pb-root{position:absolute; inset:0; display:flex; flex-direction:column;
+  padding:clamp(1rem,2.5vh,1.7rem) clamp(1.5rem,3.4vw,3.2rem) clamp(.85rem,2vh,1.4rem);}
+.pb-head{margin-bottom:clamp(.35rem,1vh,.7rem);}
+.pb-head .heading{margin-bottom:.3rem;}
+.pb-lead{font-size:clamp(.82rem,1.3vw,.99rem); line-height:1.48; color:#33453d; max-width:96ch;}
+.pb-lead strong{color:var(--forest);}
+.pb-body{flex:1; min-height:0; display:grid; grid-template-columns:minmax(300px,45%) 1fr;
+  gap:clamp(1rem,2.5vw,2rem); align-items:center;}
+.pb-left{display:flex; flex-direction:column; gap:clamp(.4rem,1.1vh,.7rem); min-width:0;}
+.pb-card{background:#fff; border:1px solid var(--line); border-left:5px solid #A4373A;
+  border-radius:13px; padding:clamp(.55rem,1.4vh,.9rem) clamp(.75rem,1.6vw,1.1rem);
+  box-shadow:0 3px 12px rgba(20,40,30,.06);}
+.pb-card-top{display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;}
+.pb-card-name{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
+  font-size:clamp(.95rem,1.55vw,1.18rem);}
+.pb-chip{font-size:clamp(.58rem,.95vw,.7rem); font-weight:800; letter-spacing:.07em;
+  text-transform:uppercase; color:#fff; background:#A4373A; padding:.18em .6em; border-radius:20px;}
+.pb-card-sub{font-size:clamp(.76rem,1.2vw,.9rem); color:#3a4a43; margin-top:.2rem;}
+.pb-card-sub strong{color:var(--forest);}
+.pb-scale{width:100%; height:auto; margin:.35rem 0 .1rem;}
+.pb-axis{stroke:#c9d3ce; stroke-width:1.5;}
+.pb-safe rect{fill:#4C956C; opacity:.42;}
+.pb-over rect{fill:#A4373A; opacity:.28;}
+.pb-bline{stroke:#1A3C34; stroke-width:2.2; stroke-dasharray:4 3;}
+.pb-dot{stroke:#fff; stroke-width:2;}
+.pb-dot.pre{fill:#2D6A4F;} .pb-dot.now{fill:#A4373A;}
+.pb-sm{font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; fill:#5b6b63;}
+.pb-sm.b{fill:#1A3C34;} .pb-sm.n{fill:#A4373A;}
+.pb-card-note{font-size:clamp(.72rem,1.15vw,.86rem); color:var(--muted); line-height:1.4; margin-top:.25rem;}
+.pb-readout{min-height:2.5em; display:flex; flex-direction:column; justify-content:center;
+  text-align:center; padding:.4rem .8rem; background:#fff; border:1px solid var(--line);
+  border-radius:11px; box-shadow:0 3px 12px rgba(20,40,30,.06);}
+.pb-readout-hint{font-size:clamp(.73rem,1.15vw,.86rem); color:var(--muted); font-style:italic;}
+.pb-ro-name{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
+  font-size:clamp(.85rem,1.35vw,1.02rem);}
+.pb-ro-status{font-size:clamp(.68rem,1.08vw,.8rem); font-weight:800; letter-spacing:.03em; margin-top:.1rem;}
+.pb-ro-status.crossed{color:#A4373A;} .pb-ro-status.within{color:#2D6A4F;}
+.pb-cite{font-size:clamp(.6rem,.94vw,.72rem); color:var(--muted); line-height:1.42;}
+.pb-url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.94em; color:#2D6A4F;}
+.pb-wheel{min-height:0; height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.3rem;}
+.pb-wheel svg{width:100%; height:100%; max-height:56vh; min-height:0;}
+.pb-safezone{fill:#4C956C; opacity:.09;}
+.pb-ring{fill:none; stroke:#2D6A4F; stroke-width:2.6; stroke-dasharray:7 5;}
+.pb-hub{fill:#fff; stroke:#2D6A4F; stroke-width:2.4;}
+.pb-hubtxt{font-family:'Inter',sans-serif; font-weight:800; font-size:11px; fill:#2D6A4F; letter-spacing:.06em;}
+.pb-hubtxt.sm{font-size:9px; opacity:.8;}
+.pb-wedge{stroke:#fff; stroke-width:1.6; cursor:pointer; opacity:.9;
+  transition:opacity .2s ease, stroke .2s ease;}
+.pb-wedge.within{opacity:1;}
+.pb-wedge:hover{opacity:1;}
+.pb-wedge.on{opacity:1; stroke:#1A3C34; stroke-width:2.6;}
+.pb-lbl{font-family:'Inter',sans-serif; font-weight:700; font-size:11px; fill:#41514a;
+  cursor:pointer; transition:fill .2s ease;}
+.pb-lbl.crossed{fill:#8a5a12;}
+.pb-lbl.on{fill:#1A3C34; font-weight:800;}
+.pb-key{display:flex; flex-wrap:wrap; justify-content:center; gap:.35rem .95rem;}
+.pb-keyitem{display:flex; align-items:center; gap:.3rem; font-size:clamp(.63rem,.98vw,.75rem);
+  color:var(--muted); font-weight:600;}
+.pb-keyitem .sw{width:14px; height:9px; border-radius:2px; display:inline-block;}
+.pb-keyitem .sw.within{background:#4C956C;}
+.pb-keyitem .sw.crossed{background:#BC8A2E;}
+.pb-keyitem .sw.ringk{background:none; border-top:2.5px dashed #2D6A4F; height:0; border-radius:0;}
+@media (max-width:820px){
+  .pb-body{grid-template-columns:1fr;}
+  .pb-wheel{order:-1;}
+  .pb-wheel svg{max-height:36vh;}
+}
+
 /* ── Wicked Problems ──────────────────────────────────────────────────────── */
 .slide[data-type="wicked"]{background:linear-gradient(160deg,#f7f5f8,#ecedf2);}
 .wk-root{position:absolute; inset:0; display:flex; flex-direction:column;
@@ -944,6 +1015,23 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   .poll-mid{flex-direction:column; align-items:stretch; gap:.8rem;}
   .poll-figure{flex:none; height:34vh;} }
 
+/* compact live poll that nests inside another slide (poll_embed) */
+.poll-embed{background:#fff; border:1px solid var(--line); border-left:5px solid var(--accent);
+  border-radius:12px; padding:.55rem .8rem .65rem; box-shadow:var(--shadow); margin-top:.6rem;}
+.poll-embed-prompt{font-size:clamp(.62rem,1vw,.74rem); font-weight:800; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:.15rem;}
+.poll-embed-q{font-size:clamp(.85rem,1.35vw,1.02rem); font-weight:700; line-height:1.35;
+  color:var(--forest); margin-bottom:.5rem;}
+.poll-embed .poll-opts{flex:none; min-height:0; display:flex; flex-direction:column;
+  justify-content:flex-start; gap:.35rem; margin:0;}
+.poll-embed .poll-opt{padding:.4rem .7rem; border-radius:9px;}
+.poll-embed .poll-opt-label{font-size:clamp(.8rem,1.2vw,.95rem);}
+.poll-embed .poll-opt-count{font-size:clamp(.66rem,.95vw,.78rem);}
+.poll-embed .poll-foot{margin-top:.5rem; max-width:none; width:100%; gap:.7rem;}
+.poll-embed .poll-total,.poll-embed .poll-hint{font-size:clamp(.7rem,1.05vw,.82rem);}
+.poll-embed .poll-reset{font-size:.74rem; padding:.35rem .75rem;}
+.poll-embed.host .poll-opt{cursor:default;}
+
 
 .slide.wordcloud{background:linear-gradient(160deg,#f4f8f6,#e8f1ec);}
 .wc-root{position:absolute; inset:0; display:flex; flex-direction:column;
@@ -1275,6 +1363,119 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     <div class="bleed-media cover"><img src="media/image9.jpg" alt=""></div>
   </div>
   <div class="footer">© 2023 W. W. Norton &amp; Company, Inc.</div>
+</section>
+<section class="slide" data-type="pbound" style="--accent:#2D6A4F">
+  <div class="pb-root" id="pb-root">
+    <div class="pb-head">
+      <div class="eyebrow">1.2 &nbsp;·&nbsp; Planetary Boundaries</div>
+      <h2 class="heading">Planetary Boundaries</h2>
+      <p class="pb-lead">Earth-system scientists have mapped <strong>nine processes</strong> that hold the
+        planet in the stable state civilization grew up in. Each has an estimated boundary; stay inside all
+        nine and we stay in the <strong>safe operating space for humanity</strong>. As of the 2023
+        assessment, <strong>six of the nine have been crossed</strong>.</p>
+    </div>
+    <div class="pb-body">
+      <div class="pb-left">
+        <div class="pb-card">
+          <div class="pb-card-top">
+            <span class="pb-card-name">Climate change</span>
+            <span class="pb-chip crossed">boundary crossed</span>
+          </div>
+          <div class="pb-card-sub">Control variable: <strong>atmospheric CO&#8322; concentration</strong></div>
+          <svg class="pb-scale" viewBox="0 0 400 74" role="img"
+               aria-label="Carbon dioxide scale: 280 ppm preindustrial, 350 ppm boundary, above 420 ppm today">
+            <line class="pb-axis" x1="16" y1="46" x2="384" y2="46"/>
+            <g class="pb-safe"><rect x="16" y="40" width="152" height="12" rx="3"/></g>
+            <g class="pb-over"><rect x="168" y="40" width="216" height="12" rx="3"/></g>
+            <line class="pb-bline" x1="168" y1="26" x2="168" y2="62"/>
+            <text class="pb-sm b" x="168" y="20" text-anchor="middle">boundary 350 ppm</text>
+            <circle class="pb-dot pre" cx="60" cy="46" r="6"/>
+            <text class="pb-sm" x="60" y="70" text-anchor="middle">280 preindustrial</text>
+            <circle class="pb-dot now" cx="322" cy="46" r="7.5"/>
+            <text class="pb-sm n" x="322" y="70" text-anchor="middle">above 420 today</text>
+          </svg>
+          <div class="pb-card-note">Rising CO&#8322; is what pushes this boundary further out of the safe
+            zone every year &mdash; which is why climate change shows up in nearly every chapter of this course.</div>
+        </div>
+        <div class="pb-readout" id="pb-readout">
+          <span class="pb-readout-hint">Tap any wedge to see where that boundary stands.</span>
+        </div>
+        <p class="pb-cite">Framework: Rockstr&ouml;m et al. (2009), &ldquo;A safe operating space for humanity,&rdquo;
+          <em>Nature</em> 461:472&ndash;475. Current status: Richardson et al. (2023), &ldquo;Earth beyond six of nine
+          planetary boundaries,&rdquo; <em>Science Advances</em> 9(37) &mdash;
+          <span class="pb-url">doi.org/10.1126/sciadv.adh2458</span>. CO&#8322; record: NOAA Global Monitoring
+          Laboratory &mdash; <span class="pb-url">gml.noaa.gov/ccgg/trends/global.html</span></p>
+      </div>
+      <div class="pb-wheel">
+        <svg viewBox="0 0 560 492" role="img"
+             aria-label="Radial diagram of nine planetary boundaries; six extend past the boundary ring">
+          <defs>
+            <filter id="pbWobble" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.024" numOctaves="2" seed="6" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+          </defs>
+          <g filter="url(#pbWobble)">
+            <circle class="pb-safezone" cx="280" cy="236" r="92"/>
+            <path class="pb-wedge crossed" data-pb="0" d="M270.5,207.6 L233.0,95.6 A148.0,148.0 0 0 1 327.0,95.6 L289.5,207.6 A30.0,30.0 0 0 0 270.5,207.6 Z" fill="#BC8A2E"/>
+            <path class="pb-wedge crossed" data-pb="1" d="M291.0,208.1 L337.2,90.9 A156.0,156.0 0 0 1 413.0,154.5 L305.6,220.3 A30.0,30.0 0 0 0 291.0,208.1 Z" fill="#BC8A2E"/>
+            <path class="pb-wedge within" data-pb="2" d="M306.4,221.7 L331.0,208.3 A58.0,58.0 0 0 1 337.4,244.6 L309.7,240.4 A30.0,30.0 0 0 0 306.4,221.7 Z" fill="#4C956C"/>
+            <path class="pb-wedge within" data-pb="3" d="M309.4,242.0 L346.6,249.6 A68.0,68.0 0 0 1 325.1,286.9 L299.9,258.5 A30.0,30.0 0 0 0 309.4,242.0 Z" fill="#4C956C"/>
+            <path class="pb-wedge within" data-pb="4" d="M298.7,259.5 L333.5,303.3 A86.0,86.0 0 0 1 282.3,322.0 L280.8,266.0 A30.0,30.0 0 0 0 298.7,259.5 Z" fill="#4C956C"/>
+            <path class="pb-wedge crossed" data-pb="5" d="M279.2,266.0 L275.8,397.9 A162.0,162.0 0 0 1 179.2,362.8 L261.3,259.5 A30.0,30.0 0 0 0 279.2,266.0 Z" fill="#BC8A2E"/>
+            <path class="pb-wedge crossed" data-pb="6" d="M260.1,258.5 L204.5,321.4 A114.0,114.0 0 0 1 168.3,258.7 L250.6,242.0 A30.0,30.0 0 0 0 260.1,258.5 Z" fill="#BC8A2E"/>
+            <path class="pb-wedge crossed" data-pb="7" d="M250.3,240.4 L161.3,253.7 A120.0,120.0 0 0 1 174.5,178.7 L253.6,221.7 A30.0,30.0 0 0 0 250.3,240.4 Z" fill="#BC8A2E"/>
+            <path class="pb-wedge crossed" data-pb="8" d="M254.4,220.3 L145.3,153.4 A158.0,158.0 0 0 1 222.1,89.0 L269.0,208.1 A30.0,30.0 0 0 0 254.4,220.3 Z" fill="#BC8A2E"/>
+            <circle class="pb-ring" cx="280" cy="236" r="92"/>
+            <circle class="pb-hub" cx="280" cy="236" r="30"/>
+          </g>
+          <text class="pb-hubtxt" x="280" y="234" text-anchor="middle">SAFE</text>
+          <text class="pb-hubtxt sm" x="280" y="246" text-anchor="middle">SPACE</text>
+          <text class="pb-lbl crossed" data-pblbl="0" x="280.0" y="46.5" text-anchor="middle"><tspan x="280.0" dy="0">Climate</tspan><tspan x="280.0" dy="11">change</tspan></text>
+          <text class="pb-lbl crossed" data-pblbl="1" x="398.3" y="89.5" text-anchor="start"><tspan x="398.3" dy="0">Novel</tspan><tspan x="398.3" dy="11">entities</tspan></text>
+          <text class="pb-lbl within" data-pblbl="2" x="461.2" y="198.5" text-anchor="start"><tspan x="461.2" dy="0">Ozone</tspan><tspan x="461.2" dy="11">depletion</tspan></text>
+          <text class="pb-lbl within" data-pblbl="3" x="439.3" y="322.5" text-anchor="start"><tspan x="439.3" dy="0">Aerosol</tspan><tspan x="439.3" dy="11">loading</tspan></text>
+          <text class="pb-lbl within" data-pblbl="4" x="342.9" y="403.4" text-anchor="middle"><tspan x="342.9" dy="0">Ocean</tspan><tspan x="342.9" dy="11">acidification</tspan></text>
+          <text class="pb-lbl crossed" data-pblbl="5" x="217.1" y="403.4" text-anchor="middle"><tspan x="217.1" dy="0">Biogeochemical</tspan><tspan x="217.1" dy="11">flows</tspan></text>
+          <text class="pb-lbl crossed" data-pblbl="6" x="120.7" y="322.5" text-anchor="end"><tspan x="120.7" dy="0">Freshwater</tspan><tspan x="120.7" dy="11">change</tspan></text>
+          <text class="pb-lbl crossed" data-pblbl="7" x="98.8" y="198.5" text-anchor="end"><tspan x="98.8" dy="0">Land-system</tspan><tspan x="98.8" dy="11">change</tspan></text>
+          <text class="pb-lbl crossed" data-pblbl="8" x="161.7" y="89.5" text-anchor="end"><tspan x="161.7" dy="0">Biosphere</tspan><tspan x="161.7" dy="11">integrity</tspan></text>
+        </svg>
+        <div class="pb-key">
+          <span class="pb-keyitem"><i class="sw within"></i>still within the boundary</span>
+          <span class="pb-keyitem"><i class="sw crossed"></i>boundary crossed</span>
+          <span class="pb-keyitem"><i class="sw ringk"></i>the boundary itself</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">&copy; 2023 W. W. Norton &amp; Company, Inc.</div>
+  <script>
+  (function(){
+    var root=document.getElementById("pb-root"); if(!root) return;
+    var readout=document.getElementById("pb-readout");
+    var NAMES=["Climate change", "Novel entities", "Ozone depletion", "Aerosol loading", "Ocean acidification", "Biogeochemical flows", "Freshwater change", "Land-system change", "Biosphere integrity"];
+    var STATUS=["crossed", "crossed", "within", "within", "within", "crossed", "crossed", "crossed", "crossed"];
+    var wedges=Array.prototype.slice.call(root.querySelectorAll(".pb-wedge"));
+    var labels=Array.prototype.slice.call(root.querySelectorAll(".pb-lbl"));
+    var cur=null;
+    function pick(i){
+      if(cur===i){ cur=null;
+        wedges.forEach(function(w){ w.classList.remove("on"); });
+        labels.forEach(function(l){ l.classList.remove("on"); });
+        readout.innerHTML='<span class="pb-readout-hint">Tap any wedge to see where that boundary stands.</span>';
+        return; }
+      cur=i;
+      wedges.forEach(function(w,j){ w.classList.toggle("on", j===i); });
+      labels.forEach(function(l,j){ l.classList.toggle("on", j===i); });
+      var crossed = STATUS[i]==="crossed";
+      readout.innerHTML='<span class="pb-ro-name">'+NAMES[i]+'</span>'+
+        '<span class="pb-ro-status '+STATUS[i]+'">'+(crossed?"outside the safe operating space":"still within the boundary")+'</span>';
+    }
+    wedges.forEach(function(w,i){ w.addEventListener("click", function(){ pick(i); }); });
+    labels.forEach(function(l,i){ l.addEventListener("click", function(){ pick(i); }); });
+  })();
+  </script>
 </section>
 <section class="slide" data-type="wicked" style="--accent:#2D6A4F">
   <div class="wk-root" id="wk-root">
@@ -3359,7 +3560,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 
 <div class="hud">
   <button onclick="prev()" title="Previous (left arrow)">&#8249;</button>
-  <span class="counter" id="counter">1 / 28</span>
+  <span class="counter" id="counter">1 / 29</span>
   <button onclick="next()" title="Next (right arrow)">&#8250;</button>
   <button onclick="toggleMenu()" title="Slide menu (O)">&#9776;</button>
   <button onclick="toggleFs()" title="Fullscreen (F)">&#9974;</button>
@@ -3368,7 +3569,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 <div class="menu" id="menu">
   <button class="menu-close" onclick="toggleMenu(false)" aria-label="Close menu">&times;</button>
   <h3>Chapter 1 &mdash; Jump to a slide</h3>
-  <div class="menu-grid"><button class="menu-item" data-go="0"><span class="menu-num">1</span>Title</button><button class="menu-item" data-go="1"><span class="menu-num">2</span>Outline</button><button class="menu-item" data-go="2"><span class="menu-num">3</span>Announcements</button><button class="menu-item" data-go="3"><span class="menu-num">4</span>1.1 Environment &amp; Ecosystems</button><button class="menu-item" data-go="4"><span class="menu-num">5</span>1.1 Ecosystems</button><button class="menu-item" data-go="5"><span class="menu-num">6</span>1.2 ▶ Word Cloud</button><button class="menu-item" data-go="6"><span class="menu-num">7</span>1.2 ▶ Live Poll</button><button class="menu-item" data-go="7"><span class="menu-num">8</span>1.2 Triple Bottom Line</button><button class="menu-item" data-go="8"><span class="menu-num">9</span>1.2 SDGs</button><button class="menu-item" data-go="9"><span class="menu-num">10</span>1.2 Ecological Resilience</button><button class="menu-item" data-go="10"><span class="menu-num">11</span>1.2 Wicked Problems</button><button class="menu-item" data-go="11"><span class="menu-num">12</span>1.3 Environmental Justice</button><button class="menu-item" data-go="12"><span class="menu-num">13</span>1.4 Science as a Process</button><button class="menu-item" data-go="13"><span class="menu-num">14</span>1.4 ▶ EV Charging Model</button><button class="menu-item" data-go="14"><span class="menu-num">15</span>1.4 Probabilistic Models</button><button class="menu-item" data-go="15"><span class="menu-num">16</span>1.4 ▶ Class Prob Game</button><button class="menu-item" data-go="16"><span class="menu-num">17</span>1.4 ▶ Probability Simulator</button><button class="menu-item" data-go="17"><span class="menu-num">18</span>1.5 Challenges to Science</button><button class="menu-item" data-go="18"><span class="menu-num">19</span>1.6 Values &amp; Trade-Offs</button><button class="menu-item" data-go="19"><span class="menu-num">20</span>1.6 Footprints by Nation</button><button class="menu-item" data-go="20"><span class="menu-num">21</span>1.X Bonus Section</button><button class="menu-item" data-go="21"><span class="menu-num">22</span>1.X ▶ Systems Thinking</button><button class="menu-item" data-go="22"><span class="menu-num">23</span>1.X ▶ SETs Tree</button><button class="menu-item" data-go="23"><span class="menu-num">24</span>1.X ▶ In Systems Thinking</button><button class="menu-item" data-go="24"><span class="menu-num">25</span>1.X Key Concepts</button><button class="menu-item" data-go="25"><span class="menu-num">26</span>1.X ▶ Point of No Return</button><button class="menu-item" data-go="26"><span class="menu-num">27</span>1.X ★ Build Your Own SET</button><button class="menu-item" data-go="27"><span class="menu-num">28</span>Looking Ahead</button></div>
+  <div class="menu-grid"><button class="menu-item" data-go="0"><span class="menu-num">1</span>Title</button><button class="menu-item" data-go="1"><span class="menu-num">2</span>Outline</button><button class="menu-item" data-go="2"><span class="menu-num">3</span>Announcements</button><button class="menu-item" data-go="3"><span class="menu-num">4</span>1.1 Environment &amp; Ecosystems</button><button class="menu-item" data-go="4"><span class="menu-num">5</span>1.1 Ecosystems</button><button class="menu-item" data-go="5"><span class="menu-num">6</span>1.2 ▶ Word Cloud</button><button class="menu-item" data-go="6"><span class="menu-num">7</span>1.2 ▶ Live Poll</button><button class="menu-item" data-go="7"><span class="menu-num">8</span>1.2 Triple Bottom Line</button><button class="menu-item" data-go="8"><span class="menu-num">9</span>1.2 SDGs</button><button class="menu-item" data-go="9"><span class="menu-num">10</span>1.2 Ecological Resilience</button><button class="menu-item" data-go="10"><span class="menu-num">11</span>1.2 Planetary Boundaries</button><button class="menu-item" data-go="11"><span class="menu-num">12</span>1.2 Wicked Problems</button><button class="menu-item" data-go="12"><span class="menu-num">13</span>1.3 Environmental Justice</button><button class="menu-item" data-go="13"><span class="menu-num">14</span>1.4 Science as a Process</button><button class="menu-item" data-go="14"><span class="menu-num">15</span>1.4 ▶ EV Charging Model</button><button class="menu-item" data-go="15"><span class="menu-num">16</span>1.4 Probabilistic Models</button><button class="menu-item" data-go="16"><span class="menu-num">17</span>1.4 ▶ Class Prob Game</button><button class="menu-item" data-go="17"><span class="menu-num">18</span>1.4 ▶ Probability Simulator</button><button class="menu-item" data-go="18"><span class="menu-num">19</span>1.5 Challenges to Science</button><button class="menu-item" data-go="19"><span class="menu-num">20</span>1.6 Values &amp; Trade-Offs</button><button class="menu-item" data-go="20"><span class="menu-num">21</span>1.6 Footprints by Nation</button><button class="menu-item" data-go="21"><span class="menu-num">22</span>1.X Bonus Section</button><button class="menu-item" data-go="22"><span class="menu-num">23</span>1.X ▶ Systems Thinking</button><button class="menu-item" data-go="23"><span class="menu-num">24</span>1.X ▶ SETs Tree</button><button class="menu-item" data-go="24"><span class="menu-num">25</span>1.X ▶ In Systems Thinking</button><button class="menu-item" data-go="25"><span class="menu-num">26</span>1.X Key Concepts</button><button class="menu-item" data-go="26"><span class="menu-num">27</span>1.X ▶ Point of No Return</button><button class="menu-item" data-go="27"><span class="menu-num">28</span>1.X ★ Build Your Own SET</button><button class="menu-item" data-go="28"><span class="menu-num">29</span>Looking Ahead</button></div>
 </div>
 
 <script>
@@ -3419,7 +3620,7 @@ show(start);
 <script type="module">
 (async function(){
   const HOST = new URLSearchParams(location.search).has('host');
-  const polls  = Array.from(document.querySelectorAll('.slide.poll:not(.dpoll)'));
+  const polls  = Array.from(document.querySelectorAll('.slide.poll:not(.dpoll), .poll-embed'));
   const clouds = Array.from(document.querySelectorAll('.slide.wordcloud'));
   const probpolls = Array.from(document.querySelectorAll('.slide.probpoll'));
   const dpolls = Array.from(document.querySelectorAll('.slide.dpoll'));

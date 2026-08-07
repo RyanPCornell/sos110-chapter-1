@@ -1,7 +1,7 @@
 # SOS 110 — Chapter 1 Web Slideshow
 
 A click-through web version of the Chapter 1 ("Environmental Science and
-Sustainability: What's the Big Idea?") slides — 28 slides.
+Sustainability: What's the Big Idea?") slides — 29 slides.
 
 This folder is **self-contained** — everything it needs is inside it (only
 Google Fonts, the Firebase SDK, and two embedded pages come from the public web).
@@ -20,7 +20,7 @@ Three interactives sync across every open copy through Firebase Firestore:
 |---|---|
 | 6 | **Word cloud** — "What word do you associate with *sustainability*?" |
 | 7 | **Poll** — "How important is sustainability to you?" |
-| 16 | **Class probability game** — instructor picks a dice game, students predict, everyone sees the roll |
+| 17 | **Class probability game** — instructor picks a dice game, students predict, everyone sees the roll |
 
 **Open the projected copy with `?host` appended to the URL:**
 
@@ -36,11 +36,12 @@ pick the dice game, roll, and reset results.
 | Slide | What it is |
 |---|---|
 | 8 | **Triple Bottom Line** — hover a card to spotlight its circle on the Venn |
-| 11 | **Wicked Problems** — tap a stakeholder to see their competing interest |
-| 17 | **Probability simulator** — pick a game, roll a die, watch empirical frequencies converge |
-| 21–27 | **Thinking in Systems** — SETs tree, tipping points, Build Your Own SET |
+| 11 | **Planetary boundaries** — tap a wedge to see whether that boundary has been crossed |
+| 12 | **Wicked Problems** — tap a stakeholder to see their competing interest |
+| 18 | **Probability simulator** — pick a game, roll a die, watch empirical frequencies converge |
+| 22–28 | **Thinking in Systems** — SETs tree, tipping points, Build Your Own SET |
 
-Slide 14 embeds the live [EV Charging Feasibility model](https://ryanpcornell.github.io/ev_charging/).
+Slide 15 embeds the live [EV Charging Feasibility model](https://ryanpcornell.github.io/ev_charging/).
 
 ### Keyboard
 `←` / `→` navigate · `F` fullscreen · `O` slide menu
