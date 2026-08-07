@@ -370,32 +370,38 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 .pb-left{display:flex; flex-direction:column; gap:clamp(.4rem,1.1vh,.7rem); min-width:0;}
 .pb-card{background:#fff; border:1px solid var(--line); border-left:5px solid #A4373A;
   border-radius:13px; padding:clamp(.55rem,1.4vh,.9rem) clamp(.75rem,1.6vw,1.1rem);
-  box-shadow:0 3px 12px rgba(20,40,30,.06);}
+  box-shadow:0 3px 12px rgba(20,40,30,.06); transition:border-left-color .25s ease;}
+.pb-card.within{border-left-color:#2D6A4F;}
 .pb-card-top{display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;}
 .pb-card-name{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
   font-size:clamp(.95rem,1.55vw,1.18rem);}
 .pb-chip{font-size:clamp(.58rem,.95vw,.7rem); font-weight:800; letter-spacing:.07em;
   text-transform:uppercase; color:#fff; background:#A4373A; padding:.18em .6em; border-radius:20px;}
+.pb-card.within .pb-chip{background:#2D6A4F;}
 .pb-card-sub{font-size:clamp(.76rem,1.2vw,.9rem); color:#3a4a43; margin-top:.2rem;}
 .pb-card-sub strong{color:var(--forest);}
-.pb-scale{width:100%; height:auto; margin:.35rem 0 .1rem;}
-.pb-axis{stroke:#c9d3ce; stroke-width:1.5;}
-.pb-safe rect{fill:#4C956C; opacity:.42;}
-.pb-over rect{fill:#A4373A; opacity:.28;}
+.pb-scale{width:100%; height:auto; margin:.4rem 0 .15rem;}
+.pb-zone{transition:none;}
+.pb-zone.safe{fill:#4C956C; opacity:.4;}
+.pb-zone.over{fill:#A4373A; opacity:.26;}
 .pb-bline{stroke:#1A3C34; stroke-width:2.2; stroke-dasharray:4 3;}
-.pb-dot{stroke:#fff; stroke-width:2;}
-.pb-dot.pre{fill:#2D6A4F;} .pb-dot.now{fill:#A4373A;}
-.pb-sm{font-family:'Inter',sans-serif; font-size:10.5px; font-weight:700; fill:#5b6b63;}
-.pb-sm.b{fill:#1A3C34;} .pb-sm.n{fill:#A4373A;}
-.pb-card-note{font-size:clamp(.72rem,1.15vw,.86rem); color:var(--muted); line-height:1.4; margin-top:.25rem;}
-.pb-readout{min-height:2.5em; display:flex; flex-direction:column; justify-content:center;
-  text-align:center; padding:.4rem .8rem; background:#fff; border:1px solid var(--line);
-  border-radius:11px; box-shadow:0 3px 12px rgba(20,40,30,.06);}
-.pb-readout-hint{font-size:clamp(.73rem,1.15vw,.86rem); color:var(--muted); font-style:italic;}
-.pb-ro-name{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
-  font-size:clamp(.85rem,1.35vw,1.02rem);}
-.pb-ro-status{font-size:clamp(.68rem,1.08vw,.8rem); font-weight:800; letter-spacing:.03em; margin-top:.1rem;}
-.pb-ro-status.crossed{color:#A4373A;} .pb-ro-status.within{color:#2D6A4F;}
+.pb-dot{stroke:#fff; stroke-width:2; transition:cx .45s cubic-bezier(.22,.61,.36,1);}
+.pb-dot.base{fill:#4a5a52;}
+.pb-dot.now{fill:#A4373A;}
+.pb-card.within .pb-dot.now{fill:#2D6A4F;}
+.pb-vals{display:grid; grid-template-columns:repeat(3,1fr); gap:.3rem; margin-top:.1rem;}
+.pb-val{display:flex; flex-direction:column; gap:.05rem; padding:.25rem .3rem;
+  border-radius:8px; background:var(--pale); text-align:center;}
+.pb-val-k{font-size:clamp(.53rem,.86vw,.63rem); font-weight:800; letter-spacing:.055em;
+  text-transform:uppercase; color:var(--muted); line-height:1.15;}
+.pb-val-v{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
+  font-size:clamp(.76rem,1.24vw,.95rem); line-height:1.2;}
+.pb-val.b{background:#eef2f0;} .pb-val.b .pb-val-v{color:#1A3C34;}
+.pb-val.n{background:#faeeee;} .pb-val.n .pb-val-v{color:#A4373A;}
+.pb-card.within .pb-val.n{background:#eaf3ed;}
+.pb-card.within .pb-val.n .pb-val-v{color:#2D6A4F;}
+.pb-card-note{font-size:clamp(.72rem,1.15vw,.86rem); color:var(--muted); line-height:1.4; margin-top:.35rem;}
+.pb-hint{font-size:clamp(.7rem,1.1vw,.83rem); color:var(--muted); font-style:italic; text-align:center;}
 .pb-cite{font-size:clamp(.6rem,.94vw,.72rem); color:var(--muted); line-height:1.42;}
 .pb-url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.94em; color:#2D6A4F;}
 .pb-wheel{min-height:0; height:100%; display:flex; flex-direction:column;
@@ -1381,35 +1387,32 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     </div>
     <div class="pb-body">
       <div class="pb-left">
-        <div class="pb-card">
+        <div class="pb-card" id="pb-card">
           <div class="pb-card-top">
-            <span class="pb-card-name">Climate change</span>
-            <span class="pb-chip crossed">boundary crossed</span>
+            <span class="pb-card-name" data-pb-name></span>
+            <span class="pb-chip" data-pb-chip></span>
           </div>
-          <div class="pb-card-sub">Control variable: <strong>atmospheric CO&#8322; concentration</strong></div>
-          <svg class="pb-scale" viewBox="0 0 400 74" role="img"
-               aria-label="Carbon dioxide scale: 280 ppm preindustrial, 350 ppm boundary, above 420 ppm today">
-            <line class="pb-axis" x1="16" y1="46" x2="384" y2="46"/>
-            <g class="pb-safe"><rect x="16" y="40" width="152" height="12" rx="3"/></g>
-            <g class="pb-over"><rect x="168" y="40" width="216" height="12" rx="3"/></g>
-            <line class="pb-bline" x1="168" y1="26" x2="168" y2="62"/>
-            <text class="pb-sm b" x="168" y="20" text-anchor="middle">boundary 350 ppm</text>
-            <circle class="pb-dot pre" cx="60" cy="46" r="6"/>
-            <text class="pb-sm" x="60" y="70" text-anchor="middle">280 preindustrial</text>
-            <circle class="pb-dot now" cx="322" cy="46" r="7.5"/>
-            <text class="pb-sm n" x="322" y="70" text-anchor="middle">above 420 today</text>
+          <div class="pb-card-sub">Control variable: <strong data-pb-cv></strong></div>
+          <svg class="pb-scale" viewBox="0 0 400 40" role="img" aria-hidden="true">
+            <rect class="pb-zone safe" x="16" y="14" width="165.6" height="12" rx="3"/>
+            <rect class="pb-zone over" x="181.6" y="14" width="202.4" height="12" rx="3"/>
+            <line class="pb-bline" x1="181.6" y1="4" x2="181.6" y2="36"/>
+            <circle class="pb-dot base" data-pb-basedot cx="30.7" cy="20" r="5.5"/>
+            <circle class="pb-dot now" data-pb-nowdot cx="340" cy="20" r="7"/>
           </svg>
-          <div class="pb-card-note">Rising CO&#8322; is what pushes this boundary further out of the safe
-            zone every year &mdash; which is why climate change shows up in nearly every chapter of this course.</div>
+          <div class="pb-vals">
+            <div class="pb-val"><span class="pb-val-k">Holocene baseline</span><span class="pb-val-v" data-pb-base></span></div>
+            <div class="pb-val b"><span class="pb-val-k">Boundary</span><span class="pb-val-v" data-pb-bound></span></div>
+            <div class="pb-val n"><span class="pb-val-k">Current value</span><span class="pb-val-v" data-pb-cur></span></div>
+          </div>
+          <div class="pb-card-note" data-pb-note></div>
         </div>
-        <div class="pb-readout" id="pb-readout">
-          <span class="pb-readout-hint">Tap any wedge to see where that boundary stands.</span>
-        </div>
+        <p class="pb-hint">Tap any wedge on the wheel to swap this card.</p>
         <p class="pb-cite">Framework: Rockstr&ouml;m et al. (2009), &ldquo;A safe operating space for humanity,&rdquo;
-          <em>Nature</em> 461:472&ndash;475. Current status: Richardson et al. (2023), &ldquo;Earth beyond six of nine
-          planetary boundaries,&rdquo; <em>Science Advances</em> 9(37) &mdash;
-          <span class="pb-url">doi.org/10.1126/sciadv.adh2458</span>. CO&#8322; record: NOAA Global Monitoring
-          Laboratory &mdash; <span class="pb-url">gml.noaa.gov/ccgg/trends/global.html</span></p>
+          <em>Nature</em> 461:472&ndash;475. All values from Table 1 of Richardson et al. (2023), &ldquo;Earth
+          beyond six of nine planetary boundaries,&rdquo; <em>Science Advances</em> 9(37) &mdash;
+          <span class="pb-url">doi.org/10.1126/sciadv.adh2458</span>. Live CO&#8322; record: NOAA Global
+          Monitoring Laboratory &mdash; <span class="pb-url">gml.noaa.gov/ccgg/trends/global.html</span></p>
       </div>
       <div class="pb-wheel">
         <svg viewBox="0 0 560 492" role="img"
@@ -1458,27 +1461,43 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   <script>
   (function(){
     var root=document.getElementById("pb-root"); if(!root) return;
-    var readout=document.getElementById("pb-readout");
-    var NAMES=["Climate change", "Novel entities", "Ozone depletion", "Aerosol loading", "Ocean acidification", "Biogeochemical flows", "Freshwater change", "Land-system change", "Biosphere integrity"];
-    var STATUS=["crossed", "crossed", "within", "within", "within", "crossed", "crossed", "crossed", "crossed"];
+    var D=[{"name": "Climate change", "status": "crossed", "extent": 148, "cv": "Atmospheric CO\u2082 concentration", "base": 280, "bound": 350, "cur": 417, "base_s": "280 ppm", "bound_s": "350 ppm", "cur_s": "417 ppm", "note": "Rising CO\u2082 pushes this boundary further out every year. The 417 ppm above is the 2022 annual mean; NOAA posts the current global average, now past 420 ppm."}, {"name": "Novel entities", "status": "crossed", "extent": 156, "cv": "Synthetic chemicals released without adequate safety testing", "base": 0, "bound": 0, "cur": null, "base_s": "0", "bound_s": "0 released", "cur_s": "Transgressed", "note": "The only demonstrably safe level is zero release of untested compounds, so any release crosses it. The assessment marks this transgressed without a number."}, {"name": "Stratospheric ozone depletion", "status": "within", "extent": 58, "cv": "Stratospheric ozone concentration (global average)", "base": 290, "bound": 276, "cur": 284.6, "base_s": "290 DU", "bound_s": "~276 DU", "cur_s": "284.6 DU", "note": "Held inside its boundary by the Montreal Protocol phase-out of CFCs \u2014 the clearest case of a boundary pulled back from the edge by policy."}, {"name": "Atmospheric aerosol loading", "status": "within", "extent": 68, "cv": "Interhemispheric difference in aerosol optical depth", "base": 0.03, "bound": 0.1, "cur": 0.076, "base_s": "0.03", "bound_s": "0.1", "cur_s": "0.076", "note": "Measures how unevenly particle pollution sits between the hemispheres; enough asymmetry would shift monsoon circulation."}, {"name": "Ocean acidification", "status": "within", "extent": 86, "cv": "Surface-ocean aragonite saturation state (\u03a9)", "base": 3.44, "bound": 2.75, "cur": 2.8, "base_s": "3.44 \u03a9", "bound_s": "2.75 \u03a9", "cur_s": "2.8 \u03a9", "note": "Driven by the same CO\u2082 as climate change \u2014 and now sitting only just inside its boundary."}, {"name": "Biogeochemical flows", "status": "crossed", "extent": 162, "cv": "Nitrogen fixed industrially and intentionally", "base": 0, "bound": 62, "cur": 190, "base_s": "0 Tg N/yr", "bound_s": "62 Tg N/yr", "cur_s": "190 Tg N/yr", "note": "Phosphorus is over too \u2014 22.6 Tg P/yr against an 11 Tg boundary. Both come mainly from fertiliser."}, {"name": "Freshwater change", "status": "crossed", "extent": 114, "cv": "Land area with blue-water flow outside its preindustrial range", "base": 9.4, "bound": 10.2, "cur": 18.2, "base_s": "9.4%", "bound_s": "10.2%", "cur_s": "18.2%", "note": "Green water \u2014 moisture in the soil available to plants \u2014 is also over, at 15.8% against an 11.1% boundary."}, {"name": "Land-system change", "status": "crossed", "extent": 120, "cv": "Forested land remaining, % of original forest cover", "base": 100, "bound": 75, "cur": 60, "base_s": "100%", "bound_s": "75%", "cur_s": "60%", "note": "Forests are the land biome most strongly coupled to climate, so forest area stands in for all land-system change."}, {"name": "Biosphere integrity", "status": "crossed", "extent": 158, "cv": "Human appropriation of net primary production (HANPP)", "base": 1.9, "bound": 10, "cur": 30, "base_s": "1.9%", "bound_s": "10%", "cur_s": "30%", "note": "Genetic diversity is further gone still: extinctions run above 100 per million species-years against a boundary of 10."}];
+    var card=document.getElementById("pb-card");
+    var q=function(s){ return card.querySelector(s); };
     var wedges=Array.prototype.slice.call(root.querySelectorAll(".pb-wedge"));
     var labels=Array.prototype.slice.call(root.querySelectorAll(".pb-lbl"));
-    var cur=null;
-    function pick(i){
-      if(cur===i){ cur=null;
-        wedges.forEach(function(w){ w.classList.remove("on"); });
-        labels.forEach(function(l){ l.classList.remove("on"); });
-        readout.innerHTML='<span class="pb-readout-hint">Tap any wedge to see where that boundary stands.</span>';
-        return; }
-      cur=i;
+    var baseDot=q("[data-pb-basedot]"), nowDot=q("[data-pb-nowdot]");
+    var BAR_X=16, BAR_W=368, BOUND_PCT=45;      // boundary line sits at 45% of the bar
+    function xOf(pct){ return BAR_X + BAR_W*pct/100; }
+    function show(i){
+      var d=D[i], crossed = d.status==="crossed";
       wedges.forEach(function(w,j){ w.classList.toggle("on", j===i); });
       labels.forEach(function(l,j){ l.classList.toggle("on", j===i); });
-      var crossed = STATUS[i]==="crossed";
-      readout.innerHTML='<span class="pb-ro-name">'+NAMES[i]+'</span>'+
-        '<span class="pb-ro-status '+STATUS[i]+'">'+(crossed?"outside the safe operating space":"still within the boundary")+'</span>';
+      card.classList.toggle("crossed", crossed);
+      card.classList.toggle("within", !crossed);
+      q("[data-pb-name]").textContent = d.name;
+      q("[data-pb-chip]").textContent = crossed ? "boundary crossed" : "still within";
+      q("[data-pb-cv]").textContent   = d.cv;
+      q("[data-pb-base]").textContent = d.base_s;
+      q("[data-pb-bound]").textContent= d.bound_s;
+      q("[data-pb-cur]").textContent  = d.cur_s;
+      q("[data-pb-note]").textContent = d.note;
+      // place the "current" dot by how far the control variable has travelled from the
+      // Holocene baseline toward (and past) the boundary. Clamped so off-scale values
+      // still render — the printed numbers carry the real magnitude.
+      if(d.cur===null || d.bound===d.base){
+        nowDot.style.display="none";
+      } else {
+        nowDot.style.display="";
+        var ratio=(d.cur-d.base)/(d.bound-d.base);
+        var pct=Math.max(4, Math.min(93, BOUND_PCT*ratio));
+        nowDot.setAttribute("cx", xOf(pct).toFixed(1));
+      }
+      baseDot.setAttribute("cx", xOf(4).toFixed(1));
     }
-    wedges.forEach(function(w,i){ w.addEventListener("click", function(){ pick(i); }); });
-    labels.forEach(function(l,i){ l.addEventListener("click", function(){ pick(i); }); });
+    wedges.forEach(function(w,i){ w.addEventListener("click", function(){ show(i); }); });
+    labels.forEach(function(l,i){ l.addEventListener("click", function(){ show(i); }); });
+    show(0);   // climate change is the default
   })();
   </script>
 </section>
@@ -2561,7 +2580,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     <div class="bleed-text">
 <div class="eyebrow">1.X · Key Concepts in SETs</div>
 <h2 class="heading">Key Concepts in SETs</h2>
-<div class="pairs"><div class="pair"><div class="pair-head">Boundaries</div><div class="pair-desc">The limits of a system, separating it from its environment by specifying what is included and excluded from consideration.</div></div><div class="pair"><div class="pair-head">Feedback</div><div class="pair-desc">It alters the rate of change in a system. Positive feedback amplifies the change, while negative feedback abates the change.</div></div><div class="pair"><div class="pair-head">Tipping point</div><div class="pair-desc">A critical threshold where accumulated changes trigger a drastic shift into a different and often irreversible stable state.</div></div><div class="pair"><div class="pair-head">Resilience</div><div class="pair-desc">The tendency of a system to return to or remain within stable conditions, despite a change in forces acting upon the system</div></div><div class="pair"><div class="pair-head">Emergence</div><div class="pair-desc">Systems exhibit properties that cannot be predicted from the properties of their individual components</div></div></div>
+<div class="pairs"><div class="pair"><div class="pair-head">Boundaries</div><div class="pair-desc">The limits of a system, separating it from its environment by specifying what is included and excluded from consideration.</div></div><div class="pair"><div class="pair-head">Feedback</div><div class="pair-desc">It alters the rate of change in a system. Positive feedback amplifies the change, while negative feedback abates the change.</div></div><div class="pair"><div class="pair-head">Tipping point</div><div class="pair-desc">A critical threshold where accumulated changes trigger a drastic shift into a different and often irreversible stable state.</div></div><div class="pair"><div class="pair-head">Resilience</div><div class="pair-desc">The tendency of a system to return to or remain within stable conditions, despite a change in forces acting upon the system</div></div><div class="pair"><div class="pair-head">Emergent Property</div><div class="pair-desc">A characteristic resulting from <u>interactions</u> among parts of a system, not individual components.</div></div></div>
 <p class="note">The photograph is a starling murmuration: no bird is steering the flock, and no bird contains the shape. That is emergence.</p>
     </div>
     <div class="bleed-media cover"><img src="media/murmuration.jpeg" alt=""></div>
