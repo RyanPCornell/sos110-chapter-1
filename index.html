@@ -2580,7 +2580,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     <div class="bleed-text">
 <div class="eyebrow">1.X · Key Concepts in SETs</div>
 <h2 class="heading">Key Concepts in SETs</h2>
-<div class="pairs"><div class="pair"><div class="pair-head">Boundaries</div><div class="pair-desc">The limits of a system, separating it from its environment by specifying what is included and excluded from consideration.</div></div><div class="pair"><div class="pair-head">Feedback</div><div class="pair-desc">It alters the rate of change in a system. Positive feedback amplifies the change, while negative feedback abates the change.</div></div><div class="pair"><div class="pair-head">Tipping point</div><div class="pair-desc">A critical threshold where accumulated changes trigger a drastic shift into a different and often irreversible stable state.</div></div><div class="pair"><div class="pair-head">Resilience</div><div class="pair-desc">The tendency of a system to return to or remain within stable conditions, despite a change in forces acting upon the system</div></div><div class="pair"><div class="pair-head">Emergent Property</div><div class="pair-desc">A characteristic resulting from <u>interactions</u> among parts of a system, not individual components.</div></div></div>
+<div class="pairs"><div class="pair"><div class="pair-head">System Boundary</div><div class="pair-desc">The limits of a system, separating it from its surroundings/environment by specifying what is included and excluded from consideration.</div></div><div class="pair"><div class="pair-head">Feedback</div><div class="pair-desc">It alters the rate of change in a system. Positive feedback amplifies the change, while negative feedback abates the change.</div></div><div class="pair"><div class="pair-head">Tipping point</div><div class="pair-desc">A critical threshold where accumulated changes trigger a drastic shift into a different and often irreversible stable state.</div></div><div class="pair"><div class="pair-head">Resilience</div><div class="pair-desc">The tendency of a system to return to or remain within stable conditions, despite a change in forces acting upon the system</div></div><div class="pair"><div class="pair-head">Emergent Property</div><div class="pair-desc">A characteristic resulting from <u>interactions</u> among parts of a system, not individual components.</div></div></div>
 <p class="note">The photograph is a starling murmuration: no bird is steering the flock, and no bird contains the shape. That is emergence.</p>
     </div>
     <div class="bleed-media cover"><img src="media/murmuration.jpeg" alt=""></div>
@@ -3654,6 +3654,7 @@ show(start);
   const rankings = Array.from(document.querySelectorAll('.slide.ranking'));
   const spectrums = Array.from(document.querySelectorAll('.slide.spectrum'));
   const dollars = Array.from(document.querySelectorAll('.slide.dollar'));
+  const splitdollars = Array.from(document.querySelectorAll('.slide.splitdollar'));
   const endows = Array.from(document.querySelectorAll('.slide.endow'));
   const captrades = Array.from(document.querySelectorAll('.slide.captrade'));
   const qafeeds = Array.from(document.querySelectorAll('.slide.qa'));
@@ -3663,7 +3664,7 @@ show(start);
   if(!polls.length && !clouds.length && !probpolls.length && !dpolls.length && !commons.length
      && !guesses.length && !heatmaps.length && !rankings.length && !spectrums.length && !dollars.length
      && !captrades.length && !qafeeds.length && !gridmixes.length && !paybacks.length && !shifts.length
-     && !endows.length) return;
+     && !endows.length && !splitdollars.length) return;
 
   // ---- pick a backend -----------------------------------------------------
   // Simple counts API (poll, wordcloud, dpoll votes): subscribe / bump / reset
@@ -5195,6 +5196,137 @@ show(start);
         v=Math.min(MAXV, Math.round(v));
         mine=v; localStorage.setItem(doneKey, String(v));
         lockIfDone(); backend.bump('polls', id, 'd_'+v);
+      });
+    }
+    backend.subscribeDoc('polls', id, function(d){ state=d||{counts:{},released:false}; render(); });
+  });
+
+  // ---- wire each randomized two-question dollar poll (splitdollar) ----------
+  // Each browser is randomly assigned question A or B; answers pool separately as
+  // sharded counts "a_<amount>" / "b_<amount>" with a broadcast `released` flag.
+  // The ?host copy shows a holding message (neither question); on release both
+  // distributions render side by side (class mean + histogram + n/median/range).
+  splitdollars.forEach(function(sec){
+    const id = sec.dataset.sdId;
+    const prefix = sec.dataset.sdPrefix||'$';
+    const qA = sec.dataset.sdQa||'', qB = sec.dataset.sdQb||'', HH = sec.dataset.sdHh||'';
+    const heading = sec.querySelector('[data-sd-heading]');
+    const studentBox = sec.querySelector('[data-sd-student]');
+    const hostWait = sec.querySelector('[data-sd-hostwait]');
+    const resultBox = sec.querySelector('[data-sd-result]');
+    const form = sec.querySelector('[data-sd-form]');
+    const input = sec.querySelector('[data-sd-input]');
+    const submitBtn = sec.querySelector('[data-sd-submit]');
+    const totalEl = sec.querySelector('[data-sd-total]');
+    const hintEl = sec.querySelector('[data-sd-hint]');
+    const revealBtn = sec.querySelector('[data-sd-reveal]');
+    const resetBtn = sec.querySelector('[data-sd-reset]');
+    const avg = {a:sec.querySelector('[data-sd-avg="a"]'), b:sec.querySelector('[data-sd-avg="b"]')};
+    const hist = {a:sec.querySelector('[data-sd-hist="a"]'), b:sec.querySelector('[data-sd-hist="b"]')};
+    const stats = {a:sec.querySelector('[data-sd-stats="a"]'), b:sec.querySelector('[data-sd-stats="b"]')};
+    const MAXV = 100000;
+    sec.addEventListener('keydown', e=>{ if(navKeys.indexOf(e.key)>-1) e.stopPropagation(); });
+
+    const fmt = n => prefix + Math.round(n).toLocaleString('en-US');
+    function niceStep(range){
+      const raw = range/9 || 1;
+      const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+      const norm = raw/mag;
+      const step = norm<=1?1 : norm<=2?2 : norm<=5?5 : 10;
+      return Math.max(1, step*mag);
+    }
+
+    // stable random assignment (question A or B) per browser
+    const roleKey='sd-role:'+id;
+    let role=null; try{ role=localStorage.getItem(roleKey); }catch(e){}
+    if(role!=='a' && role!=='b'){ role = Math.random()<0.5?'a':'b'; try{ localStorage.setItem(roleKey, role); }catch(e){} }
+
+    const doneKey='sd-done:'+id;
+    let mine=null; try{ const v=localStorage.getItem(doneKey); mine=(v===null||v==='')?null:parseFloat(v); }catch(e){ mine=null; }
+    let state={counts:{},released:false};
+
+    function aggregate(counts, pfx){
+      let n=0,sum=0,min=Infinity,max=0; const vals=[];
+      const re=new RegExp('^'+pfx+'_(\\d+)$');
+      Object.keys(counts).forEach(function(k){
+        const m=k.match(re); if(!m) return;
+        const v=parseInt(m[1],10), c=counts[k]||0; if(v<0||v>MAXV||c<=0) return;
+        n+=c; sum+=v*c; vals.push([v,c]); if(v<min)min=v; if(v>max)max=v;
+      });
+      if(!n) min=0;
+      return {n:n,sum:sum,min:min,max:max,vals:vals};
+    }
+    function renderOne(agg, avgEl, histEl, statsEl){
+      avgEl.textContent = fmt(agg.n?agg.sum/agg.n:0);
+      if(!agg.n){ histEl.innerHTML=''; statsEl.textContent='No answers yet.'; return; }
+      const step=niceStep(agg.max);
+      const NB=Math.max(1,Math.min(12,Math.floor(agg.max/step)+1));
+      const bins=new Array(NB).fill(0);
+      agg.vals.forEach(function(e){ const b=Math.min(NB-1,Math.floor(e[0]/step)); bins[b]+=e[1]; });
+      const maxBin=Math.max.apply(null,bins.concat([1]));
+      let hh='';
+      for(let b=0;b<NB;b++){
+        const lo=b*step, hi=lo+step-1;
+        const h=bins[b]>0?Math.max(6,bins[b]/maxBin*100):0;
+        const lbl= step>=1000 ? (prefix+(lo/1000)+'–'+((hi+1)/1000)+'k') : (prefix+lo+'–'+hi);
+        hh+='<div class="dl-bin"><div class="dl-bin-col"><div class="dl-bin-fill" style="height:'+h+'%">'
+          +(bins[b]>0?'<span class="dl-bin-cnt">'+bins[b]+'</span>':'')+'</div></div>'
+          +'<div class="dl-bin-lbl">'+lbl+'</div></div>';
+      }
+      histEl.innerHTML=hh;
+      agg.vals.sort(function(a,b){return a[0]-b[0];});
+      let med=0,seen=0,half=(agg.n+1)/2;
+      for(const p of agg.vals){ seen+=p[1]; if(seen>=half){ med=p[0]; break; } }
+      statsEl.textContent='n='+agg.n+' · median '+fmt(med)+' · range '+fmt(agg.min)+'–'+fmt(agg.max);
+    }
+    function render(){
+      const counts=state.counts||{};
+      const aggA=aggregate(counts,'a'), aggB=aggregate(counts,'b');
+      const released=!!state.released;
+      totalEl.textContent = aggA.n+aggB.n;
+      resultBox.hidden=!released;
+      if(released){ renderOne(aggA,avg.a,hist.a,stats.a); renderOne(aggB,avg.b,hist.b,stats.b); }
+      if(HOST){
+        studentBox.hidden=true;
+        hostWait.hidden=released;
+        heading.textContent = HH;
+        revealBtn.hidden=false; resetBtn.hidden=false;
+        revealBtn.textContent = released?'Hide results':'Reveal results';
+        hintEl.textContent = released ? 'Results are on every screen.'
+          : ((aggA.n+aggB.n)+' answer'+((aggA.n+aggB.n)===1?'':'s')+' in — reveal when the class is ready.');
+      } else {
+        hostWait.hidden=true;
+        heading.textContent = (role==='a'?qA:qB);
+        studentBox.hidden=released;
+        if(released) hintEl.textContent='The results are in!';
+        else if(mine!==null) hintEl.textContent='Your answer is locked in. Results appear when your instructor reveals them…';
+        else hintEl.textContent='Type a dollar amount, then lock it in.';
+      }
+    }
+    function lockIfDone(){
+      if(mine===null) return;
+      input.value=mine; input.disabled=true;
+      submitBtn.disabled=true; submitBtn.textContent='Locked in ✓';
+    }
+    // initial paint so the student sees their question (and the host its holding
+    // message) before the first Firestore snapshot arrives
+    if(HOST){ heading.textContent=HH; hostWait.hidden=false; studentBox.hidden=true; }
+    else { heading.textContent = (role==='a'?qA:qB); }
+
+    if(HOST){
+      sec.classList.add('host');
+      revealBtn.addEventListener('click', ()=> backend.mergeDoc('polls', id, {released:!state.released}));
+      resetBtn.addEventListener('click', ()=>{ if(confirm('Reset all answers for both questions?')) backend.setDoc('polls', id, {counts:{}, released:false}); });
+    } else {
+      lockIfDone();
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(mine!==null) return;
+        let v=parseFloat(input.value);
+        if(isNaN(v)||v<0){ input.focus(); return; }
+        v=Math.min(MAXV, Math.round(v));
+        mine=v; localStorage.setItem(doneKey, String(v));
+        lockIfDone(); backend.bump('polls', id, role+'_'+v);
       });
     }
     backend.subscribeDoc('polls', id, function(d){ state=d||{counts:{},released:false}; render(); });
