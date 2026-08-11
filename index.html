@@ -1973,7 +1973,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     <div class="bleed-text">
       <div class="eyebrow">1.X &nbsp;·&nbsp; Bonus</div>
       <h2 class="heading">Bonus: Thinking in Systems</h2>
-      <p class="lead">Sustainability problems are tangles of social, ecological, and technical parts. These interactive tools, drawn from the Module 1 systems-thinking material, let you feel how the pieces connect, tip, and feed back on one another.</p>
+      <p class="lead">Sustainability problems are tangles of social, ecological, and technical parts.</p>
       <ul class="bullets">
         <li>Systems thinking: why the whole is more than the sum of its parts</li>
         <li>How social, ecological, and technical systems overlap</li>
@@ -2161,7 +2161,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
         <div class="ap-bar-pct" data-pct>100%</div></div>
       <button class="ap-reset" type="button" data-reset>↺ Put every system back</button>
     </div>
-    <p class="ix-src">Adapted from Center for Ecoliteracy (2018). Every label above is verbatim from the lecture slide.</p>
+    <p class="ix-src">Adapted from Center for Ecoliteracy (2018).</p>
   </div>
   <div class="footer"></div>
   <script>(function(){
@@ -2654,245 +2654,6 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     <div class="bleed-media cover"><img src="media/murmuration.jpeg" alt=""></div>
   </div>
   <div class="footer">© 2023 W. W. Norton &amp; Company, Inc.</div>
-</section>
-<section class="slide fd-slide" data-type="fold" style="--accent:#7D5BA6">
-  <div class="slide-inner col ix-inner fd-root" data-fd>
-    <div class="eyebrow">1.X &nbsp;·&nbsp; Tipping Points</div>
-    <h2 class="heading ix-head">Point of No Return</h2>
-    <p class="fd-lede">Push the <b>pressure</b> on this ecosystem and watch its <b>health</b>. For a long time it copes &mdash;
-      then it crosses a <b>tipping point</b> and collapses in one step. Now try to undo it: pulling the pressure back
-      <em>does not</em> bring it back. That gap is the point of no return.</p>
-
-    <div class="fd-body">
-      <!-- ── the phase diagram: health vs pressure, with the fold ── -->
-      <div class="fd-scene">
-        <svg viewBox="0 0 520 360" class="fd-svg" data-phase role="img"
-             aria-label="A curve of ecosystem health against pressure that folds back on itself"></svg>
-        <div class="fd-legend">
-          <span><i class="fd-k up"></i>healthy state</span>
-          <span><i class="fd-k mid"></i>unstable edge</span>
-          <span><i class="fd-k lo"></i>collapsed state</span>
-          <span><i class="fd-k ball"></i>where the system is now</span>
-        </div>
-      </div>
-
-      <!-- ── the data + controls ── -->
-      <div class="fd-side">
-        <div class="fd-readrow">
-          <div class="fd-read"><div class="fd-read-n" data-rP>0</div><div class="fd-read-l">Pressure</div></div>
-          <div class="fd-read"><div class="fd-read-n" data-rH>100</div><div class="fd-read-l">Health</div></div>
-          <div class="fd-status" data-status>Healthy</div>
-        </div>
-
-        <div class="fd-ts">
-          <svg viewBox="0 0 300 120" class="fd-tsvg" data-ts role="img" aria-label="Health over time"></svg>
-          <div class="fd-tscap">Health over time &mdash; the data record as you change the pressure.</div>
-        </div>
-
-        <label class="fd-ctl"><span>Pressure on the system <b data-vP>0</b> / 100</span>
-          <input type="range" min="0" max="100" value="0" step="0.5" data-slider></label>
-
-        <div class="fd-btns">
-          <button class="fd-btn play" type="button" data-auto>▶ Push it to the edge &amp; back</button>
-          <button class="fd-btn" type="button" data-reset>↺ Reset</button>
-        </div>
-
-        <div class="fd-msg" data-msg></div>
-      </div>
-    </div>
-
-    <p class="ix-src">Model: the classic grazed-ecosystem / shallow-lake regime shift
-      dH/dt = H(1&minus;H/100) &minus; c&middot;H&sup2;/(H&sup2;+h&sup2;), a <b>fold bifurcation</b>
-      (Noy-Meir 1975; May 1977; Scheffer et al., <i>Nature</i>, 2001). Pressure is the grazing/nutrient load c.</p>
-  </div>
-  <div class="footer"></div>
-  <script>(function(){
-    var root=document.currentScript.closest('.fd-slide');
-    if(!root||root.dataset.wired)return; root.dataset.wired='1';
-    var wrap=root.querySelector('[data-fd]');
-    var NAV=["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," ","PageUp","PageDown","Home","End"];
-    wrap.addEventListener('keydown',function(e){ if(NAV.indexOf(e.key)>-1) e.stopPropagation(); });
-    var NS='http://www.w3.org/2000/svg';
-    function el(n,at){ var e=document.createElementNS(NS,n); for(var k in at) e.setAttribute(k,at[k]); return e; }
-
-    // ── model ──────────────────────────────────────────────────────────────
-    // dH/dt = H(1-H/100) - c*H^2/(H^2+h^2);  pressure P in 0..100 maps to c.
-    var HMAX=100, hHalf=8, CMAX=34;
-    function cOf(P){ return P/100*CMAX; }
-    function POf(c){ return c/CMAX*100; }
-    function fdot(H,c){ return H*(1-H/HMAX) - c*H*H/(H*H+hHalf*hHalf); }
-    // equilibrium manifold: for a state H, the pressure that holds it there.
-    function cEq(H){ return (1-H/HMAX)*(H*H+hHalf*hHalf)/H; }
-    function dcEq(H){ var e=0.01; return (cEq(H+e)-cEq(H-e))/(2*e); }  // sign → stable/unstable
-
-    // find the two folds (dc/dH = 0) by scanning H
-    var foldHi=null, foldLo=null, prev=null;
-    for(var H=99.5; H>0.4; H-=0.1){
-      var d=dcEq(H);
-      if(prev!==null && ((prev<0)!==(d<0))){
-        if(foldHi===null) foldHi=H; else foldLo=H;
-      }
-      prev=d;
-    }
-    var P_tip = POf(cEq(foldHi));     // pressure where the healthy state vanishes → collapse
-    var P_rec = POf(cEq(foldLo));     // pressure below which recovery becomes possible
-    var c_tip=cEq(foldHi), c_rec=cEq(foldLo);
-    // invert the (monotone) equilibrium branches: cEq decreases with H on each branch
-    function solveBranch(c,a,b){ var lo=a,hi=b; for(var it=0;it<60;it++){ var m=(lo+hi)/2; if(cEq(m)>c) lo=m; else hi=m; } return (lo+hi)/2; }
-    function upperEq(c){ return c<=c_tip ? solveBranch(c, foldHi, 100) : null; }   // healthy branch
-    function lowerEq(c){ return c>=c_rec ? solveBranch(c, 0.3, foldLo) : null; }    // collapsed branch
-
-    // ── build the phase diagram (static parts) ──────────────────────────────
-    var svg=wrap.querySelector('[data-phase]');
-    var X0=54, X1=498, Y0=316, Y1=26;                 // plot box (pressure x, health y)
-    function px(P){ return X0+(P/100)*(X1-X0); }
-    function py(H){ return Y0-(H/100)*(Y0-Y1); }
-    function drawPhase(){
-      svg.innerHTML='';
-      var defs=el('defs',{}); defs.innerHTML=
-        '<filter id="fdRough" x="-6%" y="-6%" width="112%" height="112%">'+
-        '<feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="6" result="n"/>'+
-        '<feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter>';
-      svg.appendChild(defs);
-      // bistable band shading (between the two fold pressures)
-      svg.appendChild(el('rect',{x:px(P_rec), y:Y1, width:px(P_tip)-px(P_rec), height:Y0-Y1,
-        fill:'#6D597A', 'fill-opacity':'0.06'}));
-      var g=el('g',{filter:'url(#fdRough)'}); svg.appendChild(g);
-      // axes
-      g.appendChild(el('path',{d:'M'+X0+' '+Y1+' L'+X0+' '+Y0+' L'+X1+' '+Y0,
-        fill:'none', stroke:'#9db3a9','stroke-width':2.4,'stroke-linecap':'round'}));
-      // build the manifold, split into stable/unstable by dc/dH sign
-      var up='', mid='', lo='';
-      for(var H=99.6; H>=0.6; H-=0.2){
-        var P=POf(cEq(H)); if(P<0||P>100) continue;
-        var pt=px(P).toFixed(1)+' '+py(H).toFixed(1);
-        if(H>foldHi) up += (up?' L':'M')+pt;
-        else if(H>foldLo) mid += (mid?' L':'M')+pt;
-        else lo += (lo?' L':'M')+pt;
-      }
-      g.appendChild(el('path',{d:lo, fill:'none', stroke:'#9c6b3b','stroke-width':4,'stroke-linecap':'round'}));
-      g.appendChild(el('path',{d:mid, fill:'none', stroke:'#9aa6a0','stroke-width':3,'stroke-dasharray':'6 6','stroke-linecap':'round'}));
-      g.appendChild(el('path',{d:up, fill:'none', stroke:'#2f7d4f','stroke-width':4,'stroke-linecap':'round'}));
-      // threshold guide-lines
-      g.appendChild(el('path',{d:'M'+px(P_tip)+' '+Y1+' L'+px(P_tip)+' '+Y0, stroke:'#A4373A','stroke-width':2,'stroke-dasharray':'4 5'}));
-      g.appendChild(el('path',{d:'M'+px(P_rec)+' '+Y1+' L'+px(P_rec)+' '+Y0, stroke:'#2f7d4f','stroke-width':2,'stroke-dasharray':'4 5'}));
-      // the collapse cliff (dotted arrow at the tipping point)
-      g.appendChild(el('path',{d:'M'+px(P_tip)+' '+py(foldHi)+' L'+px(P_tip)+' '+(py(2)-6),
-        stroke:'#A4373A','stroke-width':2,'stroke-dasharray':'2 4','marker-end':''}));
-      g.appendChild(el('path',{d:'M'+(px(P_tip)-6)+' '+(py(2)-14)+' L'+px(P_tip)+' '+(py(2)-4)+' L'+(px(P_tip)+6)+' '+(py(2)-14),
-        fill:'none', stroke:'#A4373A','stroke-width':2,'stroke-linecap':'round'}));
-      // labels
-      var t;
-      t=el('text',{x:(X0+X1)/2, y:Y0+30, 'text-anchor':'middle', class:'fd-axl'}); t.textContent='Pressure on the system →'; g.appendChild(t);
-      t=el('text',{x:X0-40, y:(Y0+Y1)/2, 'text-anchor':'middle', class:'fd-axl', transform:'rotate(-90 '+(X0-40)+' '+((Y0+Y1)/2)+')'}); t.textContent='System health →'; g.appendChild(t);
-      t=el('text',{x:px(P_tip)+5, y:Y1+12, 'text-anchor':'start', class:'fd-tipl'}); t.textContent='tipping point'; g.appendChild(t);
-      t=el('text',{x:px(P_rec)-5, y:Y1+12, 'text-anchor':'end', class:'fd-recl'}); t.textContent='recovery needs this'; g.appendChild(t);
-      t=el('text',{x:px(12), y:py(93), class:'fd-brl', fill:'#2f7d4f'}); t.textContent='healthy'; g.appendChild(t);
-      t=el('text',{x:px(86), y:py(9), 'text-anchor':'end', class:'fd-brl', fill:'#9c6b3b'}); t.textContent='collapsed'; g.appendChild(t);
-      // dynamic layer: trail + ball
-      trail=el('path',{d:'', fill:'none', stroke:'#6D597A','stroke-width':2,'stroke-opacity':'0.5','stroke-linecap':'round','stroke-dasharray':'1 5'});
-      svg.appendChild(trail);
-      ballGlow=el('circle',{r:16, fill:'#6D597A','fill-opacity':'0.18'}); svg.appendChild(ballGlow);
-      ball=el('circle',{r:8.5, fill:'#2f7d4f', stroke:'#fff','stroke-width':2.5}); svg.appendChild(ball);
-    }
-    var trail, ball, ballGlow, trailPts=[];
-
-    // ── time-series ──────────────────────────────────────────────────────────
-    var ts=wrap.querySelector('[data-ts]'), tsHist=[];
-    function drawTS(){
-      ts.innerHTML='';
-      var TX0=8, TX1=294, TY0=112, TY1=8;
-      ts.appendChild(el('path',{d:'M'+TX0+' '+TY0+' L'+TX1+' '+TY0, stroke:'#e2e9e5','stroke-width':1.4}));
-      ts.appendChild(el('path',{d:'M'+TX0+' '+TY1+' L'+TX0+' '+TY0, stroke:'#e2e9e5','stroke-width':1.4}));
-      var lbl=el('text',{x:TX0+2,y:TY1+9,class:'fd-tslbl'}); lbl.textContent='health'; ts.appendChild(lbl);
-      if(tsHist.length<2) return;
-      var n=tsHist.length, X=function(i){return TX0+i/(n-1)*(TX1-TX0);}, Y=function(v){return TY0-(v/100)*(TY0-TY1);};
-      // pressure (faint)
-      var dp=''; tsHist.forEach(function(o,i){ dp+=(i?' L':'M')+X(i).toFixed(1)+' '+Y(o.P).toFixed(1); });
-      ts.appendChild(el('path',{d:dp, fill:'none', stroke:'#c3b3d1','stroke-width':1.6,'stroke-dasharray':'3 3'}));
-      // health (bold, colored by end state)
-      var dh=''; tsHist.forEach(function(o,i){ dh+=(i?' L':'M')+X(i).toFixed(1)+' '+Y(o.H).toFixed(1); });
-      var last=tsHist[n-1].H, col=last>foldLo? (last>foldHi?'#2f7d4f':'#BC8A2E') : '#9c6b3b';
-      ts.appendChild(el('path',{d:dh, fill:'none', stroke:col,'stroke-width':2.8,'stroke-linecap':'round','stroke-linejoin':'round'}));
-    }
-
-    // ── state (quasi-static with branch memory → clean cliff + hysteresis) ──
-    var slider=wrap.querySelector('[data-slider]');
-    slider.addEventListener('keydown',function(e){ e.stopPropagation(); });
-    var P=0, H=100, branch='up', everTipped=false, auto=null, tick=0;
-    var rP=wrap.querySelector('[data-rP]'), rH=wrap.querySelector('[data-rH]'), vP=wrap.querySelector('[data-vP]');
-    var statusEl=wrap.querySelector('[data-status]'), msgEl=wrap.querySelector('[data-msg]');
-
-    function statusText(){
-      if(branch==='lo'){ statusEl.textContent='Collapsed'; statusEl.className='fd-status bad'; }
-      else if(P>P_tip-8){ statusEl.textContent='Stressed'; statusEl.className='fd-status warn'; }
-      else { statusEl.textContent='Healthy'; statusEl.className='fd-status ok'; }
-    }
-    function setMsg(){
-      var m, cls;
-      if(branch==='lo'){
-        cls='bad';
-        m = (P<P_tip-0.5)
-          ? '<b>Point of no return.</b> The pressure is now <em>below</em> the level where it collapsed &mdash; yet health has not come back. A tipping point is not a line you can just step back across.'
-          : '<b>Collapsed.</b> Past the tipping point the healthy state simply no longer exists. Easing the pressure a little does nothing.';
-      } else if(everTipped){
-        cls='ok';
-        m='<b>Recovered</b> &mdash; but only after the pressure fell <em>far</em> below the tipping point, past the green line. Undoing a collapse costs far more than preventing it.';
-      } else if(P>P_tip-8){
-        cls='warn';
-        m='<b>On the edge.</b> Health is dropping faster now and the healthy state is running out of room. One more push and there is no way back.';
-      } else {
-        cls='ok';
-        m='<b>Healthy.</b> The system is absorbing the pressure and holding its good state. It looks safe &mdash; even as it drifts toward the edge.';
-      }
-      msgEl.className='fd-msg '+cls; msgEl.innerHTML=m;
-    }
-
-    function step(){
-      requestAnimationFrame(step);
-      if(!root.classList.contains('active')) return;
-      var c=cOf(P);
-      // branch transitions = the two folds
-      if(branch==='up' && P>P_tip){ branch='lo'; everTipped=true; }
-      else if(branch==='lo' && P<P_rec){ branch='up'; }
-      var target = branch==='up' ? upperEq(c) : lowerEq(c);
-      if(target==null) target = (branch==='up'? (lowerEq(c)||2) : (upperEq(c)||98));
-      H += (target-H)*0.24;                       // snappy relaxation → the drop reads as a cliff
-      if(Math.abs(target-H)<0.05) H=target;
-      if(H<0.2)H=0.2; if(H>100)H=100;
-      // ball + trail
-      var bx=px(P), by=py(H);
-      ball.setAttribute('cx',bx); ball.setAttribute('cy',by);
-      ball.setAttribute('fill', branch==='up'? (P>P_tip-8?'#BC8A2E':'#2f7d4f') : '#9c6b3b');
-      ballGlow.setAttribute('cx',bx); ballGlow.setAttribute('cy',by);
-      trailPts.push(bx.toFixed(1)+' '+by.toFixed(1)); if(trailPts.length>520) trailPts.shift();
-      trail.setAttribute('d','M'+trailPts.join(' L'));
-      rP.textContent=Math.round(P); rH.textContent=Math.round(H); vP.textContent=Math.round(P);
-      statusText();
-      if(++tick%4===0){ tsHist.push({P:P,H:H}); if(tsHist.length>150) tsHist.shift(); drawTS(); }
-      if(tick%6===0) setMsg();
-    }
-
-    slider.addEventListener('input',function(){ if(auto) stopAuto(); P=+slider.value; });
-    function stopAuto(){ if(auto){ clearInterval(auto); auto=null; wrap.querySelector('[data-auto]').textContent='▶ Push it to the edge & back'; } }
-    wrap.querySelector('[data-auto]').addEventListener('click',function(){
-      if(auto){ stopAuto(); return; }
-      this.textContent='❚❚ Pause';
-      var dir=1;
-      auto=setInterval(function(){
-        P += dir*0.45;
-        if(P>=100){ P=100; dir=-1; }
-        if(P<=0 && dir<0){ P=0; stopAuto(); }
-        slider.value=P;
-      }, 28);
-    });
-    wrap.querySelector('[data-reset]').addEventListener('click',function(){
-      stopAuto(); P=0; H=100; branch='up'; everTipped=false; slider.value=0;
-      trailPts=[]; trail.setAttribute('d',''); tsHist=[]; drawTS(); setMsg();
-    });
-
-    drawPhase(); drawTS(); setMsg(); step();
-  })();</script>
 </section>
 <section class="slide bd-slide" data-type="setbuilder" style="--accent:#7D5BA6">
   <div class="bd-root" data-bd>
@@ -3652,7 +3413,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 
 <div class="hud">
   <button onclick="prev()" title="Previous (left arrow)">&#8249;</button>
-  <span class="counter" id="counter">1 / 29</span>
+  <span class="counter" id="counter">1 / 28</span>
   <button onclick="next()" title="Next (right arrow)">&#8250;</button>
   <button onclick="toggleMenu()" title="Slide menu (O)">&#9776;</button>
   <button onclick="toggleFs()" title="Fullscreen (F)">&#9974;</button>
@@ -3661,7 +3422,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 <div class="menu" id="menu">
   <button class="menu-close" onclick="toggleMenu(false)" aria-label="Close menu">&times;</button>
   <h3>Chapter 1 &mdash; Jump to a slide</h3>
-  <div class="menu-grid"><button class="menu-item" data-go="0"><span class="menu-num">1</span>Title</button><button class="menu-item" data-go="1"><span class="menu-num">2</span>Outline</button><button class="menu-item" data-go="2"><span class="menu-num">3</span>Announcements</button><button class="menu-item" data-go="3"><span class="menu-num">4</span>1.1 Environment &amp; Ecosystems</button><button class="menu-item" data-go="4"><span class="menu-num">5</span>1.1 Ecosystems</button><button class="menu-item" data-go="5"><span class="menu-num">6</span>1.2 ▶ Word Cloud</button><button class="menu-item" data-go="6"><span class="menu-num">7</span>1.2 ▶ Live Poll</button><button class="menu-item" data-go="7"><span class="menu-num">8</span>1.2 Triple Bottom Line</button><button class="menu-item" data-go="8"><span class="menu-num">9</span>1.2 SDGs</button><button class="menu-item" data-go="9"><span class="menu-num">10</span>1.2 Ecological Resilience</button><button class="menu-item" data-go="10"><span class="menu-num">11</span>1.2 Planetary Boundaries</button><button class="menu-item" data-go="11"><span class="menu-num">12</span>1.2 Wicked Problems</button><button class="menu-item" data-go="12"><span class="menu-num">13</span>1.3 Environmental Justice</button><button class="menu-item" data-go="13"><span class="menu-num">14</span>1.4 Science as a Process</button><button class="menu-item" data-go="14"><span class="menu-num">15</span>1.4 ▶ EV Charging Model</button><button class="menu-item" data-go="15"><span class="menu-num">16</span>1.4 Probabilistic Models</button><button class="menu-item" data-go="16"><span class="menu-num">17</span>1.4 ▶ Class Prob Game</button><button class="menu-item" data-go="17"><span class="menu-num">18</span>1.4 ▶ Probability Simulator</button><button class="menu-item" data-go="18"><span class="menu-num">19</span>1.5 Challenges to Science</button><button class="menu-item" data-go="19"><span class="menu-num">20</span>1.6 Values &amp; Trade-Offs</button><button class="menu-item" data-go="20"><span class="menu-num">21</span>1.6 Footprints by Nation</button><button class="menu-item" data-go="21"><span class="menu-num">22</span>1.X Bonus Section</button><button class="menu-item" data-go="22"><span class="menu-num">23</span>1.X ▶ Systems Thinking</button><button class="menu-item" data-go="23"><span class="menu-num">24</span>1.X ▶ SETs Tree</button><button class="menu-item" data-go="24"><span class="menu-num">25</span>1.X ▶ In Systems Thinking</button><button class="menu-item" data-go="25"><span class="menu-num">26</span>1.X Key Concepts</button><button class="menu-item" data-go="26"><span class="menu-num">27</span>1.X ▶ Point of No Return</button><button class="menu-item" data-go="27"><span class="menu-num">28</span>1.X ★ Build Your Own SET</button><button class="menu-item" data-go="28"><span class="menu-num">29</span>Looking Ahead</button></div>
+  <div class="menu-grid"><button class="menu-item" data-go="0"><span class="menu-num">1</span>Title</button><button class="menu-item" data-go="1"><span class="menu-num">2</span>Outline</button><button class="menu-item" data-go="2"><span class="menu-num">3</span>Announcements</button><button class="menu-item" data-go="3"><span class="menu-num">4</span>1.1 Environment &amp; Ecosystems</button><button class="menu-item" data-go="4"><span class="menu-num">5</span>1.1 Ecosystems</button><button class="menu-item" data-go="5"><span class="menu-num">6</span>1.2 ▶ Word Cloud</button><button class="menu-item" data-go="6"><span class="menu-num">7</span>1.2 ▶ Live Poll</button><button class="menu-item" data-go="7"><span class="menu-num">8</span>1.2 Triple Bottom Line</button><button class="menu-item" data-go="8"><span class="menu-num">9</span>1.2 SDGs</button><button class="menu-item" data-go="9"><span class="menu-num">10</span>1.2 Ecological Resilience</button><button class="menu-item" data-go="10"><span class="menu-num">11</span>1.2 Planetary Boundaries</button><button class="menu-item" data-go="11"><span class="menu-num">12</span>1.2 Wicked Problems</button><button class="menu-item" data-go="12"><span class="menu-num">13</span>1.3 Environmental Justice</button><button class="menu-item" data-go="13"><span class="menu-num">14</span>1.4 Science as a Process</button><button class="menu-item" data-go="14"><span class="menu-num">15</span>1.4 ▶ EV Charging Model</button><button class="menu-item" data-go="15"><span class="menu-num">16</span>1.4 Probabilistic Models</button><button class="menu-item" data-go="16"><span class="menu-num">17</span>1.4 ▶ Class Prob Game</button><button class="menu-item" data-go="17"><span class="menu-num">18</span>1.4 ▶ Probability Simulator</button><button class="menu-item" data-go="18"><span class="menu-num">19</span>1.5 Challenges to Science</button><button class="menu-item" data-go="19"><span class="menu-num">20</span>1.6 Values &amp; Trade-Offs</button><button class="menu-item" data-go="20"><span class="menu-num">21</span>1.6 Footprints by Nation</button><button class="menu-item" data-go="21"><span class="menu-num">22</span>1.X Bonus Section</button><button class="menu-item" data-go="22"><span class="menu-num">23</span>1.X ▶ Systems Thinking</button><button class="menu-item" data-go="23"><span class="menu-num">24</span>1.X ▶ SETs Tree</button><button class="menu-item" data-go="24"><span class="menu-num">25</span>1.X ▶ In Systems Thinking</button><button class="menu-item" data-go="25"><span class="menu-num">26</span>1.X Key Concepts</button><button class="menu-item" data-go="26"><span class="menu-num">27</span>1.X ★ Build Your Own SET</button><button class="menu-item" data-go="27"><span class="menu-num">28</span>Looking Ahead</button></div>
 </div>
 
 <script>

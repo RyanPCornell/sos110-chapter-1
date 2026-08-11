@@ -1,7 +1,7 @@
 # SOS 110 — Chapter 1 Web Slideshow
 
 A click-through web version of the Chapter 1 ("Environmental Science and
-Sustainability: What's the Big Idea?") slides — 29 slides.
+Sustainability: What's the Big Idea?") slides — 28 slides.
 
 This folder is **self-contained** — everything it needs is inside it (only
 Google Fonts, the Firebase SDK, and two embedded pages come from the public web).
@@ -39,7 +39,7 @@ pick the dice game, roll, and reset results.
 | 11 | **Planetary boundaries** — tap a wedge to see whether that boundary has been crossed |
 | 12 | **Wicked Problems** — tap a stakeholder to see their competing interest |
 | 18 | **Probability simulator** — pick a game, roll a die, watch empirical frequencies converge |
-| 22–28 | **Thinking in Systems** — SETs tree, tipping points, Build Your Own SET |
+| 22–27 | **Thinking in Systems** — SETs tree, key concepts, Build Your Own SET |
 
 Slide 15 embeds the live [EV Charging Feasibility model](https://ryanpcornell.github.io/ev_charging/).
 
