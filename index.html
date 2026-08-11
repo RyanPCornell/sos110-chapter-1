@@ -952,6 +952,61 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   .an-main{flex:1 1 60%;}
   .an-due{min-width:0; margin-left:3.1rem;}
 }
+/* live attendance — host bar (only rendered on the ?host copy) */
+.an-att{display:flex; align-items:center; gap:.7rem; flex-wrap:wrap;
+  margin-top:clamp(.6rem,1.6vh,1.1rem);}
+.an-att[hidden]{display:none;}
+.an-att-btn{font-family:inherit; font-weight:800; color:#fff; border:none; cursor:pointer;
+  background:var(--accent,var(--forest-mid)); border-radius:11px; padding:.6rem 1.4rem;
+  font-size:clamp(.85rem,1.4vw,1rem); transition:filter .15s;}
+.an-att-btn:hover{filter:brightness(1.1);}
+.an-att-btn[hidden]{display:none;}
+.an-att-btn.go{background:#A4373A;}
+.an-att-cancel{font-family:inherit; font-weight:600; color:var(--muted); background:#fff;
+  border:1.5px solid var(--line); border-radius:11px; padding:.6rem 1rem; cursor:pointer;
+  font-size:clamp(.78rem,1.2vw,.9rem);}
+.an-att-cancel:hover{border-color:var(--accent); color:var(--accent);}
+.an-att-cancel[hidden]{display:none;}
+.an-att-status{font-size:clamp(.78rem,1.2vw,.92rem); color:var(--muted);}
+.an-att-status strong{font-family:'Merriweather',serif; color:var(--forest); font-size:1.15em;}
+.an-att-status.warn{color:#A4373A; font-weight:700; font-style:italic;}
+/* live attendance — student pop-up (appended to <body>, shows over any slide) */
+.at-modal{position:fixed; inset:0; z-index:120; display:flex; align-items:center;
+  justify-content:center; padding:1.2rem; background:rgba(16,28,23,.55);
+  backdrop-filter:blur(3px); animation:at-fade .22s ease;}
+.at-modal[hidden]{display:none;}
+@keyframes at-fade{from{opacity:0;}}
+.at-box{background:#fff; border-radius:18px; box-shadow:0 24px 60px rgba(0,0,0,.35);
+  width:min(470px,100%); max-height:92vh; overflow-y:auto;
+  padding:clamp(1.2rem,3.4vw,1.9rem); animation:at-rise .26s cubic-bezier(.22,.61,.36,1);}
+@keyframes at-rise{from{transform:translateY(16px) scale(.97); opacity:0;}}
+.at-title{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
+  font-size:clamp(1.15rem,2.4vw,1.5rem); line-height:1.2;}
+.at-chapter{font-size:clamp(.8rem,1.3vw,.94rem); color:var(--muted); margin-top:.25rem;}
+.at-field{display:block; margin-top:.9rem;}
+.at-lbl{display:block; font-size:clamp(.7rem,1.1vw,.8rem); font-weight:800; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:.25rem;}
+.at-input{width:100%; font-family:inherit; font-size:clamp(.92rem,1.5vw,1.05rem);
+  padding:.62rem .8rem; border:2px solid var(--line); border-radius:11px; color:var(--ink);
+  background:#fff;}
+.at-input:focus{outline:none; border-color:var(--accent,var(--forest-mid));}
+.at-input.bad{border-color:#A4373A; background:#fdf6f6;}
+.at-submit{width:100%; margin-top:1.1rem; font-family:inherit; font-weight:800; color:#fff;
+  border:none; cursor:pointer; background:var(--forest-mid); border-radius:12px;
+  padding:.78rem 1rem; font-size:clamp(.98rem,1.6vw,1.12rem); transition:filter .15s;}
+.at-submit:hover:not(:disabled){filter:brightness(1.1);}
+.at-submit:disabled{background:#bcc7c2; cursor:default;}
+.at-msg{margin-top:.7rem; font-size:clamp(.78rem,1.25vw,.9rem); line-height:1.4; min-height:1.2em;}
+.at-msg.err{color:#A4373A; font-weight:700;}
+.at-msg.ok{color:#2D6A4F; font-weight:700;}
+.at-done{text-align:center; padding:.4rem 0 .2rem;}
+.at-done-tick{font-size:2.6rem; line-height:1;}
+.at-done-txt{font-family:'Merriweather',serif; font-weight:800; color:#2D6A4F;
+  font-size:clamp(1.05rem,2vw,1.3rem); margin-top:.4rem;}
+.at-done-sub{font-size:clamp(.8rem,1.28vw,.94rem); color:var(--muted); margin-top:.35rem; line-height:1.45;}
+.at-close{margin-top:1rem; font-family:inherit; font-weight:700; color:var(--muted); background:#fff;
+  border:1.5px solid var(--line); border-radius:11px; padding:.5rem 1.2rem; cursor:pointer;}
+.at-close:hover{border-color:var(--accent); color:var(--accent);}
 
 
 .slide.poll{background:linear-gradient(160deg,#f4f8f6,#e8f1ec);}
@@ -1183,7 +1238,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     <div class="outline-grid"><div class="ol-item"><span class="ol-num">1.1</span><span class="ol-text">What Is the Environment, and What Is an Ecosystem?</span></div><div class="ol-item"><span class="ol-num">1.2</span><span class="ol-text">What Is Sustainability?</span></div><div class="ol-item"><span class="ol-num">1.3</span><span class="ol-text">What Is Environmental Justice?</span></div><div class="ol-item"><span class="ol-num">1.4</span><span class="ol-text">What Is Science?</span></div><div class="ol-item"><span class="ol-num">1.5</span><span class="ol-text">What Are Challenges to Good Science?</span></div><div class="ol-item"><span class="ol-num">1.6</span><span class="ol-text">What Shapes Our Decisions on the Environment?</span></div><div class="ol-item"><span class="ol-num">1.X</span><span class="ol-text">Thinking in Systems</span></div></div>
   </div>
 </section>
-<section class="slide" data-type="announce" style="--accent:#2D6A4F">
+<section class="slide" data-type="announce" style="--accent:#2D6A4F" data-at-id="ch1-attendance" data-at-chapter="SOS 110 — Chapter 1: Environmental Science and Sustainability">
   <div class="slide-inner col">
     <div class="an-head">
       <div class="eyebrow">Announcements</div>
@@ -1192,6 +1247,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     </div>
     <div class="an-list"><div class="an-row"><span class="an-num">1</span><div class="an-main"><div class="an-name">InQuizitive: How to Use InQuizitive</div><div class="an-detail">Norton's adaptive practice tool — start here to learn how InQuizitive works.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div><div class="an-row"><span class="an-num">2</span><div class="an-main"><div class="an-name">InQuizitive: Chapter 1</div><div class="an-detail">Adaptive practice covering this chapter's key concepts.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div><div class="an-row"><span class="an-num">3</span><div class="an-main"><div class="an-name">Introduce Yourself in Video</div><div class="an-detail">Record and post a short video introduction for the class.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div></div>
     <p class="an-note">Due dates to be announced — mark your calendar once they're posted.</p>
+    <div class="an-att" data-at-bar hidden><button class="an-att-btn" type="button" data-at-open>Attendance</button><button class="an-att-btn go" type="button" data-at-finalize hidden>Submit Attendance</button><button class="an-att-cancel" type="button" data-at-cancel hidden>Cancel</button><span class="an-att-status" data-at-status></span></div>
   </div>
   <div class="footer">© 2023 W. W. Norton &amp; Company, Inc.</div>
 </section>
@@ -3661,10 +3717,12 @@ show(start);
   const gridmixes = Array.from(document.querySelectorAll('.slide.gridmix'));
   const paybacks = Array.from(document.querySelectorAll('.slide.payback'));
   const shifts = Array.from(document.querySelectorAll('.slide.shift'));
+  const guessembeds = Array.from(document.querySelectorAll('.guess-embed'));
+  const attends = Array.from(document.querySelectorAll('[data-at-id]'));
   if(!polls.length && !clouds.length && !probpolls.length && !dpolls.length && !commons.length
      && !guesses.length && !heatmaps.length && !rankings.length && !spectrums.length && !dollars.length
      && !captrades.length && !qafeeds.length && !gridmixes.length && !paybacks.length && !shifts.length
-     && !endows.length && !splitdollars.length) return;
+     && !endows.length && !splitdollars.length && !guessembeds.length && !attends.length) return;
 
   // ---- pick a backend -----------------------------------------------------
   // Simple counts API (poll, wordcloud, dpoll votes): subscribe / bump / reset
@@ -5086,6 +5144,137 @@ show(start);
     backend.subscribeDoc('polls', id, function(d){ state=d||{counts:{},released:false}; render(); });
   });
 
+  // ---- wire each nested guess-a-number poll (guess_embed) ------------------
+  // Sharded counts key "g_<value × 10^dec>" plus broadcast `opened`/`released`
+  // flags in 'polls'. TWO instructor gates: the whole block is hidden on every
+  // screen until the host opens the poll, and the distribution stays hidden
+  // until the host releases it. The host copy never shows the input.
+  guessembeds.forEach(function(root){
+    const id = root.dataset.guessId;
+    const unit = root.dataset.geUnit || '';
+    const dec = parseInt(root.dataset.geDec||'1', 10);
+    const scale = Math.pow(10, dec);
+    const MAXV = parseFloat(root.dataset.geMax||'100');
+    const launch = root.querySelector('[data-ge-launch]');
+    const body = root.querySelector('[data-ge-body]');
+    const form = root.querySelector('[data-ge-form]');
+    const input = root.querySelector('[data-ge-input]');
+    const studentBox = root.querySelector('[data-ge-student]');
+    const submitBtn = root.querySelector('[data-ge-submit]');
+    const resultBox = root.querySelector('[data-ge-result]');
+    const avgEl = root.querySelector('[data-ge-avg]');
+    const histEl = root.querySelector('[data-ge-hist]');
+    const statsEl = root.querySelector('[data-ge-stats]');
+    const answerEl = root.querySelector('[data-ge-answer]');
+    const totalEl = root.querySelector('[data-ge-total]');
+    const hintEl = root.querySelector('[data-ge-hint]');
+    const openBtn = root.querySelector('[data-ge-open]');
+    const revealBtn = root.querySelector('[data-ge-reveal]');
+    const closeBtn = root.querySelector('[data-ge-close]');
+    const resetBtn = root.querySelector('[data-ge-reset]');
+    root.addEventListener('keydown', e=>{ if(navKeys.indexOf(e.key)>-1) e.stopPropagation(); });
+
+    const trim = v => (Math.round(v*scale)/scale).toFixed(dec).replace(/\.0+$/,'');
+    const fmt = v => trim(v) + (unit ? ' ' + unit : '');
+    function niceStep(range){
+      const raw = (range||1)/6;
+      const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+      const norm = raw/mag;
+      const step = norm<=1?1 : norm<=2?2 : norm<=5?5 : 10;
+      return Math.max(1/scale, step*mag);
+    }
+
+    const doneKey='guess-done:'+id;
+    let mine=null; try{ const v=localStorage.getItem(doneKey); mine=(v===null||v==='')?null:parseFloat(v); }catch(e){ mine=null; }
+    let state={counts:{},opened:false,released:false};
+
+    function aggregate(counts){
+      let n=0, sum=0, min=Infinity, max=-Infinity; const vals=[];
+      Object.keys(counts).forEach(function(k){
+        const m=k.match(/^g_(\d+)$/); if(!m) return;
+        const v=parseInt(m[1],10)/scale, c=counts[k]||0;
+        if(v<0 || v>MAXV || c<=0) return;
+        n+=c; sum+=v*c; vals.push([v,c]); if(v<min)min=v; if(v>max)max=v;
+      });
+      if(!n){ min=0; max=0; }
+      return {n:n, sum:sum, min:min, max:max, vals:vals};
+    }
+    function renderResult(agg){
+      avgEl.textContent = agg.n ? fmt(agg.sum/agg.n) : '—';
+      if(!agg.n){ histEl.innerHTML=''; statsEl.textContent='No guesses yet.'; return; }
+      const step = niceStep(agg.max-agg.min);
+      const lo = Math.floor(agg.min/step)*step;
+      const NB = Math.max(1, Math.min(10, Math.floor((agg.max-lo)/step)+1));
+      const bins = new Array(NB).fill(0);
+      agg.vals.forEach(function(e){
+        const b=Math.max(0, Math.min(NB-1, Math.floor((e[0]-lo)/step)));
+        bins[b]+=e[1];
+      });
+      const maxBin = Math.max.apply(null, bins.concat([1]));
+      let hh='';
+      for(let b=0;b<NB;b++){
+        const h = bins[b]>0 ? Math.max(6, bins[b]/maxBin*100) : 0;
+        hh+='<div class="ge-bin"><div class="ge-bin-col"><div class="ge-bin-fill" style="height:'+h+'%">'
+          +(bins[b]>0?'<span class="ge-bin-cnt">'+bins[b]+'</span>':'')
+          +'</div></div><div class="ge-bin-lbl">'+trim(lo+b*step)+'</div></div>';
+      }
+      histEl.innerHTML=hh;
+      agg.vals.sort(function(a,b){return a[0]-b[0];});
+      let med=0, seen=0, half=(agg.n+1)/2;
+      for(const pair of agg.vals){ seen+=pair[1]; if(seen>=half){ med=pair[0]; break; } }
+      statsEl.textContent='n='+agg.n+' · median '+fmt(med)+' · range '+trim(agg.min)+'–'+fmt(agg.max);
+    }
+    function render(){
+      const agg=aggregate(state.counts||{});
+      const opened=!!state.opened, released=!!state.released;
+      root.hidden = !(HOST || opened);
+      launch.hidden = !(HOST && !opened);
+      body.hidden = !opened;
+      totalEl.textContent=agg.n;
+      resultBox.hidden=!released;
+      if(answerEl) answerEl.hidden=!released;
+      if(released) renderResult(agg);
+      if(HOST){
+        studentBox.hidden=true;
+        revealBtn.hidden=!opened; closeBtn.hidden=!opened; resetBtn.hidden=!opened;
+        revealBtn.textContent = released ? 'Hide results' : 'Release results';
+        hintEl.textContent = released ? 'Results are on every screen.'
+          : (agg.n+' guess'+(agg.n===1?'':'es')+' in — release when the class is ready.');
+      } else {
+        studentBox.hidden=released;
+        if(released) hintEl.textContent='The results are in!';
+        else if(mine!==null) hintEl.textContent='Your guess is locked in. Results appear when your instructor releases them…';
+        else hintEl.textContent='Type a number, then lock it in.';
+      }
+    }
+    function lockIfDone(){
+      if(mine===null) return;
+      input.value=trim(mine); input.disabled=true;
+      submitBtn.disabled=true; submitBtn.textContent='Locked in ✓';
+    }
+
+    if(HOST){
+      root.classList.add('host');
+      openBtn.addEventListener('click', ()=> backend.mergeDoc('polls', id, {opened:true}));
+      revealBtn.addEventListener('click', ()=> backend.mergeDoc('polls', id, {released:!state.released}));
+      closeBtn.addEventListener('click', ()=> backend.mergeDoc('polls', id, {opened:false, released:false}));
+      resetBtn.addEventListener('click', ()=>{ if(confirm('Reset all guesses for this question?')) backend.setDoc('polls', id, {counts:{}, opened:true, released:false}); });
+    } else {
+      lockIfDone();
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(mine!==null) return;
+        let v=parseFloat(input.value);
+        if(isNaN(v) || v<0){ input.focus(); return; }
+        const key=Math.round(Math.min(MAXV, v)*scale);
+        mine=key/scale; localStorage.setItem(doneKey, String(mine));
+        lockIfDone(); backend.bump('polls', id, 'g_'+key);
+      });
+    }
+    render();
+    backend.subscribeDoc('polls', id, function(d){ state=d||{counts:{},opened:false,released:false}; render(); });
+  });
+
   // ---- wire each type-a-dollar-amount slide --------------------------------
   // Sharded counts key "d_<amount>" + a broadcast `released` flag in 'polls'.
   // Students type a $ figure + lock in; on release every copy shows the class
@@ -6407,6 +6596,176 @@ show(start);
     }
     backend.subscribeDoc('polls', selfId, function(d){ selfState=d||{}; render(); });
     if(phase==='post') backend.subscribeDoc('polls', preId, function(d){ preState=d||{}; render(); });
+  });
+
+  // ---- wire live attendance ------------------------------------------------
+  // Firestore carries ONLY {open, session, n} — never a name or an email. Student
+  // PII is POSTed straight from their browser to the Apps Script endpoint, because
+  // the Firestore rules for this project are world-readable.
+  attends.forEach(function(sec){
+    const id=sec.dataset.atId, CHAPTER=sec.dataset.atChapter;
+    const URL_=(window.ATTENDANCE_URL||'').trim();
+    const bar=sec.querySelector('[data-at-bar]');
+    const openBtn=sec.querySelector('[data-at-open]');
+    const finBtn=sec.querySelector('[data-at-finalize]');
+    const cancelBtn=sec.querySelector('[data-at-cancel]');
+    const statusEl=sec.querySelector('[data-at-status]');
+    let st={};
+
+    // ---- the student pop-up lives on <body> so it shows over ANY slide ----
+    const modal=document.createElement('div');
+    modal.className='at-modal'; modal.hidden=true;
+    modal.innerHTML=
+      '<div class="at-box" role="dialog" aria-modal="true" aria-label="Attendance Information">'+
+        '<div data-at-form>'+
+          '<div class="at-title">Attendance Information</div>'+
+          '<div class="at-chapter" data-at-ch></div>'+
+          '<label class="at-field"><span class="at-lbl">Full name</span>'+
+            '<input class="at-input" type="text" data-at-name autocomplete="name" '+
+            'placeholder="First and last name"></label>'+
+          '<label class="at-field"><span class="at-lbl">Email</span>'+
+            '<input class="at-input" type="email" data-at-email autocomplete="email" '+
+            'placeholder="you@asu.edu"></label>'+
+          '<button class="at-submit" type="button" data-at-send>Submit</button>'+
+          '<div class="at-msg" data-at-msg></div>'+
+        '</div>'+
+        '<div class="at-done" data-at-done hidden>'+
+          '<div class="at-done-tick">&#10003;</div>'+
+          '<div class="at-done-txt">Attendance submitted</div>'+
+          '<div class="at-done-sub" data-at-donesub></div>'+
+          '<button class="at-close" type="button" data-at-close>Close</button>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(modal);
+    modal.querySelector('[data-at-ch]').textContent=CHAPTER;
+    const nameEl=modal.querySelector('[data-at-name]');
+    const mailEl=modal.querySelector('[data-at-email]');
+    const sendBtn=modal.querySelector('[data-at-send]');
+    const msgEl=modal.querySelector('[data-at-msg]');
+    const formBox=modal.querySelector('[data-at-form]');
+    const doneBox=modal.querySelector('[data-at-done]');
+    // typing must not drive the deck's arrow/space slide navigation
+    modal.addEventListener('keydown', function(e){
+      if(navKeys.indexOf(e.key)>-1) e.stopPropagation();
+      if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); send(); }
+    });
+    modal.querySelector('[data-at-close]').addEventListener('click', function(){ modal.hidden=true; });
+
+    const doneKey=function(){ return 'att-done:'+id+':'+(st.session||''); };
+    function alreadyDone(){ try{ return !!localStorage.getItem(doneKey()); }catch(e){ return false; } }
+
+    function send(){
+      if(sendBtn.disabled) return;
+      const nm=(nameEl.value||'').trim(), em=(mailEl.value||'').trim();
+      nameEl.classList.toggle('bad', !nm);
+      const emOk=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em);
+      mailEl.classList.toggle('bad', !emOk);
+      if(!nm || !emOk){
+        msgEl.className='at-msg err';
+        msgEl.textContent = !nm ? 'Please enter your full name.' : 'Please enter a valid email address.';
+        return;
+      }
+      sendBtn.disabled=true; sendBtn.textContent='Sending…';
+      msgEl.className='at-msg'; msgEl.textContent='';
+      const payload={action:'record', session:String(st.session||''), chapter:CHAPTER, name:nm, email:em};
+      function finish(warn){
+        try{ localStorage.setItem(doneKey(),'1'); }catch(e){}
+        backend.mergeDocShard('polls', id, {n: backend.inc(1)});
+        modal.querySelector('[data-at-donesub]').textContent = warn ||
+          ('A confirmation email is on its way to '+em+'.');
+        formBox.hidden=true; doneBox.hidden=false;
+      }
+      if(!URL_){ finish('Recorded locally — your instructor has not finished setting up the attendance link yet.'); return; }
+      // text/plain keeps this a CORS "simple request" (no preflight), which is what
+      // an Apps Script web app accepts. If CORS still blocks, retry opaque so the
+      // row is written even though we cannot read the reply.
+      fetch(URL_, {method:'POST', mode:'cors', redirect:'follow',
+                   headers:{'Content-Type':'text/plain;charset=utf-8'},
+                   body:JSON.stringify(payload)})
+        .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status);
+                           return r.json().catch(function(){ return {ok:true}; }); })
+        .then(function(j){
+          if(j && j.ok===false) throw new Error(j.error||'rejected');
+          finish(null);
+        })
+        .catch(function(){
+          return fetch(URL_, {method:'POST', mode:'no-cors',
+                              headers:{'Content-Type':'text/plain;charset=utf-8'},
+                              body:JSON.stringify(payload)})
+            .then(function(){ finish(null); })
+            .catch(function(){
+              sendBtn.disabled=false; sendBtn.textContent='Submit';
+              msgEl.className='at-msg err';
+              msgEl.textContent='Could not reach the attendance server. Check your connection and try again.';
+            });
+        });
+    }
+    sendBtn.addEventListener('click', send);
+
+    function render(){
+      const open=!!st.open, n=st.n||0;
+      if(HOST){
+        bar.hidden=false; modal.hidden=true;
+        openBtn.hidden=open; finBtn.hidden=!open; cancelBtn.hidden=!open;
+        openBtn.textContent = st.session ? 'Start attendance again' : 'Attendance';
+        if(!URL_){
+          statusEl.className='an-att-status warn';
+          statusEl.textContent='No attendance link set — add window.ATTENDANCE_URL to firebase-config.js (see ATTENDANCE-SETUP.md).';
+        } else {
+          statusEl.className='an-att-status';
+          statusEl.innerHTML = open
+            ? '<strong>'+n+'</strong> submitted &middot; press <em>Submit Attendance</em> when everyone is in.'
+            : (st.session ? 'Last roll call: <strong>'+n+'</strong> student'+(n===1?'':'s')+'. The roster was emailed to you.'
+                          : 'Opens a name &amp; email pop-up on every student screen.');
+        }
+      } else {
+        bar.hidden=true;
+        const show = open && !alreadyDone();
+        if(show && modal.hidden){
+          formBox.hidden=false; doneBox.hidden=true;
+          sendBtn.disabled=false; sendBtn.textContent='Submit';
+          msgEl.textContent=''; msgEl.className='at-msg';
+          modal.hidden=false;
+          setTimeout(function(){ try{ nameEl.focus(); }catch(e){} }, 60);
+        } else if(!open && !doneBox.hidden===false){ /* leave a finished card up */ }
+        if(!open && formBox.hidden===false) modal.hidden=true;
+      }
+    }
+
+    if(HOST){
+      openBtn.addEventListener('click', function(){
+        // new session id + cleared shard counters
+        backend.setDoc('polls', id, {open:1, session:String(Date.now()), n:0});
+      });
+      cancelBtn.addEventListener('click', function(){
+        backend.mergeDoc('polls', id, {open:0});
+      });
+      finBtn.addEventListener('click', function(){
+        backend.mergeDoc('polls', id, {open:0});
+        if(!URL_){ alert('No attendance link is configured yet — see ATTENDANCE-SETUP.md.'); return; }
+        finBtn.disabled=true; finBtn.textContent='Sending roster…';
+        fetch(URL_, {method:'POST', mode:'cors', redirect:'follow',
+                     headers:{'Content-Type':'text/plain;charset=utf-8'},
+                     body:JSON.stringify({action:'finalize', session:String(st.session||''), chapter:CHAPTER})})
+          .catch(function(){
+            return fetch(URL_, {method:'POST', mode:'no-cors',
+                                headers:{'Content-Type':'text/plain;charset=utf-8'},
+                                body:JSON.stringify({action:'finalize', session:String(st.session||''), chapter:CHAPTER})});
+          })
+          .then(function(r){
+            finBtn.disabled=false; finBtn.textContent='Submit Attendance';
+            if(r && r.json) r.json().then(function(j){
+              if(j && typeof j.count==='number'){
+                statusEl.className='an-att-status';
+                statusEl.innerHTML='Roster emailed &mdash; <strong>'+j.count+'</strong> student'+(j.count===1?'':'s')+'.';
+              }
+            }).catch(function(){});
+          })
+          .catch(function(){ finBtn.disabled=false; finBtn.textContent='Submit Attendance';
+                             alert('Could not reach the attendance server to send the roster.'); });
+      });
+    }
+    backend.subscribeDoc('polls', id, function(d){ st=d||{}; render(); });
   });
 
   if(status!=='live') console.info('[interactive] backend =',status,'— add real values to firebase-config.js for cross-device sync.');

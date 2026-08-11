@@ -46,6 +46,23 @@ Slide 15 embeds the live [EV Charging Feasibility model](https://ryanpcornell.gi
 ### Keyboard
 `←` / `→` navigate · `F` fullscreen · `O` slide menu
 
+## Live attendance (needs a one-time setup)
+
+Slide 3 also carries a roll call. On the `?host` copy press **Attendance** — a
+name/email pop-up opens on every student's screen, whatever slide they are on —
+then **Submit Attendance** to close it and email yourself the roster. Each
+student gets a confirmation email naming the chapter.
+
+This needs a free Google Apps Script endpoint (a static site cannot send email,
+and an email API key must never sit in client-side code). Setup takes about five
+minutes: see **[ATTENDANCE-SETUP.md](ATTENDANCE-SETUP.md)** and paste the script
+in **[attendance.gs](attendance.gs)**. Until `window.ATTENDANCE_URL` is filled in
+in `firebase-config.js`, the button shows a reminder instead of collecting.
+
+> Student names and emails go straight from the browser to your Apps Script and
+> into your Google Sheet. They are **never** written to Firestore, whose rules are
+> world-readable — only an anonymous submission count syncs there.
+
 ## Announcements slide
 
 Slide 3 lists upcoming assignments with **TBA** due-date chips. To fill in real

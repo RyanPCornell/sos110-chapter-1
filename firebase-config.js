@@ -25,3 +25,15 @@ window.FIREBASE_CONFIG = {
   appId: "1:527114011645:web:6100a50465562924a24f94",
   measurementId: "G-0G7T944VXS"
 };
+
+// ─────────────────────────────────────────────────────────────────────────
+// LIVE ATTENDANCE endpoint (optional — leave "" to disable).
+//
+// Paste the /exec URL of the Google Apps Script web app that writes the
+// attendance Google Sheet and sends the confirmation emails. Full five-minute
+// setup, including the script to paste, is in _deck-builder/ATTENDANCE-SETUP.md.
+//
+// Student names and emails go STRAIGHT from the browser to this endpoint and
+// are never written to Firestore, whose rules are world-readable.
+// ─────────────────────────────────────────────────────────────────────────
+window.ATTENDANCE_URL = "";
