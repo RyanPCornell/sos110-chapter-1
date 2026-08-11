@@ -36,4 +36,4 @@ window.FIREBASE_CONFIG = {
 // Student names and emails go STRAIGHT from the browser to this endpoint and
 // are never written to Firestore, whose rules are world-readable.
 // ─────────────────────────────────────────────────────────────────────────
-window.ATTENDANCE_URL = "";
+window.ATTENDANCE_URL = "https://script.google.com/macros/s/AKfycbw097kYgdsMokVh4iwd62OPEkeYsSLEXvOqvFfT-76BjZda2KAlwgU3WQkeGlO32THA/exec";
