@@ -967,7 +967,13 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   font-size:clamp(.78rem,1.2vw,.9rem);}
 .an-att-cancel:hover{border-color:var(--accent); color:var(--accent);}
 .an-att-cancel[hidden]{display:none;}
+.an-att-sel{font-family:inherit; font-size:clamp(.8rem,1.28vw,.94rem); font-weight:700;
+  color:var(--forest); background:#fff; border:2px solid var(--line); border-radius:11px;
+  padding:.55rem .7rem; cursor:pointer;}
+.an-att-sel:focus{outline:none; border-color:var(--accent,var(--forest-mid));}
+.an-att-sel:disabled{opacity:.55; cursor:not-allowed;}
 .an-att-status{font-size:clamp(.78rem,1.2vw,.92rem); color:var(--muted);}
+.an-att-status em{font-style:normal; font-weight:800; color:var(--forest);}
 .an-att-status strong{font-family:'Merriweather',serif; color:var(--forest); font-size:1.15em;}
 .an-att-status.warn{color:#A4373A; font-weight:700; font-style:italic;}
 /* live attendance — student pop-up (appended to <body>, shows over any slide) */
@@ -983,6 +989,10 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
 .at-title{font-family:'Merriweather',serif; font-weight:800; color:var(--forest);
   font-size:clamp(1.15rem,2.4vw,1.5rem); line-height:1.2;}
 .at-chapter{font-size:clamp(.8rem,1.3vw,.94rem); color:var(--muted); margin-top:.25rem;}
+.at-section{display:inline-block; margin-top:.45rem; padding:.2em .7em; border-radius:20px;
+  background:var(--pale); border:1px solid var(--line); font-size:clamp(.72rem,1.15vw,.84rem);
+  font-weight:800; color:var(--forest);}
+.at-section[hidden]{display:none;}
 .at-field{display:block; margin-top:.9rem;}
 .at-lbl{display:block; font-size:clamp(.7rem,1.1vw,.8rem); font-weight:800; letter-spacing:.05em;
   text-transform:uppercase; color:var(--muted); margin-bottom:.25rem;}
@@ -1247,7 +1257,7 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     </div>
     <div class="an-list"><div class="an-row"><span class="an-num">1</span><div class="an-main"><div class="an-name">InQuizitive: How to Use InQuizitive</div><div class="an-detail">Norton's adaptive practice tool — start here to learn how InQuizitive works.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div><div class="an-row"><span class="an-num">2</span><div class="an-main"><div class="an-name">InQuizitive: Chapter 1</div><div class="an-detail">Adaptive practice covering this chapter's key concepts.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div><div class="an-row"><span class="an-num">3</span><div class="an-main"><div class="an-name">Introduce Yourself in Video</div><div class="an-detail">Record and post a short video introduction for the class.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div></div>
     <p class="an-note">Due dates to be announced — mark your calendar once they're posted.</p>
-    <div class="an-att" data-at-bar hidden><button class="an-att-btn" type="button" data-at-open>Attendance</button><button class="an-att-btn go" type="button" data-at-finalize hidden>Submit Attendance</button><button class="an-att-cancel" type="button" data-at-cancel hidden>Cancel</button><span class="an-att-status" data-at-status></span></div>
+    <div class="an-att" data-at-bar hidden><button class="an-att-btn" type="button" data-at-open>Attendance</button><select class="an-att-sel" data-at-section aria-label="Class section"><option value="A">Section A — day/time TBD</option><option value="B">Section B — day/time TBD</option><option value="C">Section C — day/time TBD</option></select><button class="an-att-btn go" type="button" data-at-finalize hidden>Submit Attendance</button><button class="an-att-cancel" type="button" data-at-cancel hidden>Cancel</button><span class="an-att-status" data-at-status></span></div>
   </div>
   <div class="footer">© 2023 W. W. Norton &amp; Company, Inc.</div>
 </section>
@@ -6610,7 +6620,15 @@ show(start);
     const finBtn=sec.querySelector('[data-at-finalize]');
     const cancelBtn=sec.querySelector('[data-at-cancel]');
     const statusEl=sec.querySelector('[data-at-status]');
+    const selEl=sec.querySelector('[data-at-section]');
     let st={};
+    // remember which section was last used on this machine
+    if(selEl){
+      try{ const sv=localStorage.getItem('att-sec:'+id); if(sv) selEl.value=sv; }catch(e){}
+      selEl.addEventListener('change', function(){
+        try{ localStorage.setItem('att-sec:'+id, selEl.value); }catch(e){}
+      });
+    }
 
     // ---- the student pop-up lives on <body> so it shows over ANY slide ----
     const modal=document.createElement('div');
@@ -6620,6 +6638,7 @@ show(start);
         '<div data-at-form>'+
           '<div class="at-title">Attendance Information</div>'+
           '<div class="at-chapter" data-at-ch></div>'+
+          '<div class="at-section" data-at-sec hidden></div>'+
           '<label class="at-field"><span class="at-lbl">Full name</span>'+
             '<input class="at-input" type="text" data-at-name autocomplete="name" '+
             'placeholder="First and last name"></label>'+
@@ -6667,7 +6686,9 @@ show(start);
       }
       sendBtn.disabled=true; sendBtn.textContent='Sending…';
       msgEl.className='at-msg'; msgEl.textContent='';
-      const payload={action:'record', session:String(st.session||''), chapter:CHAPTER, name:nm, email:em};
+      const payload={action:'record', session:String(st.session||''), chapter:CHAPTER,
+                     section:String(st.sec||''), sectionLabel:String(st.secLabel||''),
+                     name:nm, email:em};
       function finish(warn){
         try{ localStorage.setItem(doneKey(),'1'); }catch(e){}
         backend.mergeDocShard('polls', id, {n: backend.inc(1)});
@@ -6704,9 +6725,13 @@ show(start);
 
     function render(){
       const open=!!st.open, n=st.n||0;
+      const secTxt = st.secLabel ? String(st.secLabel) : '';
       if(HOST){
         bar.hidden=false; modal.hidden=true;
         openBtn.hidden=open; finBtn.hidden=!open; cancelBtn.hidden=!open;
+        if(selEl){ selEl.disabled=open; selEl.title = open
+          ? 'Locked while this roll call is open — press Submit Attendance or Cancel to change section.'
+          : 'Which section this roll call is for'; }
         openBtn.textContent = st.session ? 'Start attendance again' : 'Attendance';
         if(!URL_){
           statusEl.className='an-att-status warn';
@@ -6714,13 +6739,15 @@ show(start);
         } else {
           statusEl.className='an-att-status';
           statusEl.innerHTML = open
-            ? '<strong>'+n+'</strong> submitted &middot; press <em>Submit Attendance</em> when everyone is in.'
-            : (st.session ? 'Last roll call: <strong>'+n+'</strong> student'+(n===1?'':'s')+'. The roster was emailed to you.'
-                          : 'Opens a name &amp; email pop-up on every student screen.');
+            ? (secTxt ? '<em>'+secTxt+'</em> &middot; ' : '')+'<strong>'+n+'</strong> submitted &middot; press <em>Submit Attendance</em> when everyone is in.'
+            : (st.session ? 'Last roll call'+(secTxt?' ('+secTxt+')':'')+': <strong>'+n+'</strong> student'+(n===1?'':'s')+'. The roster was emailed.'
+                          : 'Pick the section, then open a name &amp; email pop-up on every student screen.');
         }
       } else {
         bar.hidden=true;
         const show = open && !alreadyDone();
+        const secEl=modal.querySelector('[data-at-sec]');
+        secEl.textContent=secTxt; secEl.hidden=!secTxt;
         if(show && modal.hidden){
           formBox.hidden=false; doneBox.hidden=true;
           sendBtn.disabled=false; sendBtn.textContent='Submit';
@@ -6735,7 +6762,9 @@ show(start);
     if(HOST){
       openBtn.addEventListener('click', function(){
         // new session id + cleared shard counters
-        backend.setDoc('polls', id, {open:1, session:String(Date.now()), n:0});
+        backend.setDoc('polls', id, {open:1, session:String(Date.now()), n:0,
+          sec: selEl ? selEl.value : '',
+          secLabel: selEl ? (selEl.options[selEl.selectedIndex]||{}).text||'' : ''});
       });
       cancelBtn.addEventListener('click', function(){
         backend.mergeDoc('polls', id, {open:0});
@@ -6746,11 +6775,13 @@ show(start);
         finBtn.disabled=true; finBtn.textContent='Sending roster…';
         fetch(URL_, {method:'POST', mode:'cors', redirect:'follow',
                      headers:{'Content-Type':'text/plain;charset=utf-8'},
-                     body:JSON.stringify({action:'finalize', session:String(st.session||''), chapter:CHAPTER})})
+                     body:JSON.stringify({action:'finalize', session:String(st.session||''), chapter:CHAPTER,
+                       section:String(st.sec||''), sectionLabel:String(st.secLabel||'')})})
           .catch(function(){
             return fetch(URL_, {method:'POST', mode:'no-cors',
                                 headers:{'Content-Type':'text/plain;charset=utf-8'},
-                                body:JSON.stringify({action:'finalize', session:String(st.session||''), chapter:CHAPTER})});
+                                body:JSON.stringify({action:'finalize', session:String(st.session||''), chapter:CHAPTER,
+                       section:String(st.sec||''), sectionLabel:String(st.secLabel||'')})});
           })
           .then(function(r){
             finBtn.disabled=false; finBtn.textContent='Submit Attendance';
