@@ -53,11 +53,16 @@ name/email pop-up opens on every student's screen, whatever slide they are on â€
 then **Submit Attendance** to close it and email yourself the roster. Each
 student gets a confirmation email naming the chapter.
 
+A dropdown beside the button picks which section the roll call is for; students
+inherit that choice automatically and see it in the pop-up.
+
 This needs a free Google Apps Script endpoint (a static site cannot send email,
-and an email API key must never sit in client-side code). Setup takes about five
-minutes: see **[ATTENDANCE-SETUP.md](ATTENDANCE-SETUP.md)** and paste the script
-in **[attendance.gs](attendance.gs)**. Until `window.ATTENDANCE_URL` is filled in
-in `firebase-config.js`, the button shows a reminder instead of collecting.
+and an email API key must never sit in client-side code). The script and its
+setup guide are **deliberately not in this public repo** â€” they carry TA email
+addresses and would be scraped. They live in the private working folder as
+`_deck-builder/attendance.gs` and `_deck-builder/ATTENDANCE-SETUP.md`. Until
+`window.ATTENDANCE_URL` is filled in in `firebase-config.js`, the button shows a
+setup reminder instead of collecting.
 
 > Student names and emails go straight from the browser to your Apps Script and
 > into your Google Sheet. They are **never** written to Firestore, whose rules are
