@@ -994,6 +994,8 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   font-weight:800; color:var(--forest);}
 .at-section[hidden]{display:none;}
 .at-field{display:block; margin-top:.9rem;}
+.at-two{display:grid; grid-template-columns:1fr 1fr; gap:.6rem;}
+@media (max-width:400px){ .at-two{grid-template-columns:1fr;} }
 .at-lbl{display:block; font-size:clamp(.7rem,1.1vw,.8rem); font-weight:800; letter-spacing:.05em;
   text-transform:uppercase; color:var(--muted); margin-bottom:.25rem;}
 .at-input{width:100%; font-family:inherit; font-size:clamp(.92rem,1.5vw,1.05rem);
@@ -6639,12 +6641,17 @@ show(start);
           '<div class="at-title">Attendance Information</div>'+
           '<div class="at-chapter" data-at-ch></div>'+
           '<div class="at-section" data-at-sec hidden></div>'+
-          '<label class="at-field"><span class="at-lbl">Full name</span>'+
-            '<input class="at-input" type="text" data-at-name autocomplete="name" '+
-            'placeholder="First and last name"></label>'+
-          '<label class="at-field"><span class="at-lbl">Email</span>'+
+          '<div class="at-two">'+
+            '<label class="at-field"><span class="at-lbl">First name</span>'+
+              '<input class="at-input" type="text" data-at-first autocomplete="given-name" '+
+              'placeholder="First"></label>'+
+            '<label class="at-field"><span class="at-lbl">Last name</span>'+
+              '<input class="at-input" type="text" data-at-last autocomplete="family-name" '+
+              'placeholder="Last"></label>'+
+          '</div>'+
+          '<label class="at-field"><span class="at-lbl">ASU email</span>'+
             '<input class="at-input" type="email" data-at-email autocomplete="email" '+
-            'placeholder="you@asu.edu"></label>'+
+            'placeholder="asurite@asu.edu"></label>'+
           '<button class="at-submit" type="button" data-at-send>Submit</button>'+
           '<div class="at-msg" data-at-msg></div>'+
         '</div>'+
@@ -6657,7 +6664,8 @@ show(start);
       '</div>';
     document.body.appendChild(modal);
     modal.querySelector('[data-at-ch]').textContent=CHAPTER;
-    const nameEl=modal.querySelector('[data-at-name]');
+    const firstEl=modal.querySelector('[data-at-first]');
+    const lastEl=modal.querySelector('[data-at-last]');
     const mailEl=modal.querySelector('[data-at-email]');
     const sendBtn=modal.querySelector('[data-at-send]');
     const msgEl=modal.querySelector('[data-at-msg]');
@@ -6675,20 +6683,25 @@ show(start);
 
     function send(){
       if(sendBtn.disabled) return;
-      const nm=(nameEl.value||'').trim(), em=(mailEl.value||'').trim();
-      nameEl.classList.toggle('bad', !nm);
-      const emOk=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em);
+      const fn=(firstEl.value||'').trim(), ln=(lastEl.value||'').trim(), em=(mailEl.value||'').trim();
+      firstEl.classList.toggle('bad', !fn);
+      lastEl.classList.toggle('bad', !ln);
+      // must be an ASU address — the part before @ is the ASURITE, which is what
+      // Canvas exports as "SIS Login ID", so rosters match without name-guessing
+      const emOk=/^[^@\s]+@([\w-]+\.)*asu\.edu$/i.test(em);
       mailEl.classList.toggle('bad', !emOk);
-      if(!nm || !emOk){
+      if(!fn || !ln || !emOk){
         msgEl.className='at-msg err';
-        msgEl.textContent = !nm ? 'Please enter your full name.' : 'Please enter a valid email address.';
+        msgEl.textContent = !fn ? 'Please enter your first name.'
+                          : !ln ? 'Please enter your last name.'
+                                : 'Please use your ASU email address — it must end in @asu.edu.';
         return;
       }
       sendBtn.disabled=true; sendBtn.textContent='Sending…';
       msgEl.className='at-msg'; msgEl.textContent='';
       const payload={action:'record', session:String(st.session||''), chapter:CHAPTER,
                      section:String(st.sec||''), sectionLabel:String(st.secLabel||''),
-                     name:nm, email:em};
+                     first:fn, last:ln, email:em};
       function finish(warn){
         try{ localStorage.setItem(doneKey(),'1'); }catch(e){}
         backend.mergeDocShard('polls', id, {n: backend.inc(1)});
@@ -6706,10 +6719,24 @@ show(start);
         .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status);
                            return r.json().catch(function(){ return {ok:true}; }); })
         .then(function(j){
-          if(j && j.ok===false) throw new Error(j.error||'rejected');
+          if(j && j.ok===false){
+            // the server understood us and said no — a retry would not help, and
+            // silently "succeeding" would tell the student they are marked present
+            // when no row was written
+            const e=new Error(j.error||'rejected'); e.rejected=true; throw e;
+          }
           finish(null);
         })
-        .catch(function(){
+        .catch(function(err){
+          if(err && err.rejected){
+            sendBtn.disabled=false; sendBtn.textContent='Submit';
+            msgEl.className='at-msg err';
+            msgEl.textContent='Not recorded — the attendance server said: '+err.message+
+                              '. Please tell your instructor.';
+            return;
+          }
+          // network/CORS failure: we cannot read the reply, so send it blind rather
+          // than block a student who really did submit
           return fetch(URL_, {method:'POST', mode:'no-cors',
                               headers:{'Content-Type':'text/plain;charset=utf-8'},
                               body:JSON.stringify(payload)})
@@ -6753,7 +6780,7 @@ show(start);
           sendBtn.disabled=false; sendBtn.textContent='Submit';
           msgEl.textContent=''; msgEl.className='at-msg';
           modal.hidden=false;
-          setTimeout(function(){ try{ nameEl.focus(); }catch(e){} }, 60);
+          setTimeout(function(){ try{ firstEl.focus(); }catch(e){} }, 60);
         } else if(!open && !doneBox.hidden===false){ /* leave a finished card up */ }
         if(!open && formBox.hidden===false) modal.hidden=true;
       }
