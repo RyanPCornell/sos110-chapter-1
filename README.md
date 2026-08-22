@@ -18,9 +18,9 @@ Three interactives sync across every open copy through Firebase Firestore:
 
 | Slide | What it is |
 |---|---|
-| 6 | **Word cloud** — "What word do you associate with *sustainability*?" |
-| 7 | **Poll** — "How important is sustainability to you?" |
-| 17 | **Class probability game** — instructor picks a dice game, students predict, everyone sees the roll |
+| 7 | **Word cloud** — "What word do you associate with *sustainability*?" |
+| 8 | **Poll** — "How important is sustainability to you?" |
+| 18 | **Class probability game** — instructor picks a dice game, students predict, everyone sees the roll |
 
 **Open the projected copy with `?host` appended to the URL:**
 
@@ -35,13 +35,14 @@ pick the dice game, roll, and reset results.
 
 | Slide | What it is |
 |---|---|
-| 8 | **Triple Bottom Line** — hover a card to spotlight its circle on the Venn |
-| 11 | **Planetary boundaries** — tap a wedge to see whether that boundary has been crossed |
-| 12 | **Wicked Problems** — tap a stakeholder to see their competing interest |
-| 18 | **Probability simulator** — pick a game, roll a die, watch empirical frequencies converge |
-| 22–27 | **Thinking in Systems** — SETs tree, key concepts, Build Your Own SET |
+| 7 | **Pull One Thread** — drag the sea-otter slider and watch a kelp forest become an urchin barren |
+| 9 | **Triple Bottom Line** — hover a card to spotlight its circle on the Venn |
+| 12 | **Planetary boundaries** — tap a wedge to see whether that boundary has been crossed |
+| 13 | **Wicked Problems** — tap a stakeholder to see their competing interest |
+| 19 | **Probability simulator** — pick a game, roll a die, watch empirical frequencies converge |
+| 23–28 | **Thinking in Systems** — SETs tree, key concepts, Build Your Own SET |
 
-Slide 15 embeds the live [EV Charging Feasibility model](https://ryanpcornell.github.io/ev_charging/).
+Slide 16 embeds the live [EV Charging Feasibility model](https://ryanpcornell.github.io/ev_charging/).
 
 ### Keyboard
 `←` / `→` navigate · `F` fullscreen · `O` slide menu
