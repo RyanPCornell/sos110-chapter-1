@@ -1067,6 +1067,15 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
   font-family:inherit; font-size:.84rem; font-weight:700; padding:.5rem 1.05rem; border-radius:9px; cursor:pointer;}
 .poll-reveal:hover{filter:brightness(1.08);}
 .poll-reveal ~ .poll-reset{margin-left:.6rem;}
+/* staged options (poll_slide(staged=True)): revealed one at a time by the host */
+.poll-opt.pending{display:none;}
+.poll-opt.just-in{animation:pollslide .34s cubic-bezier(.2,1.2,.4,1);}
+@keyframes pollslide{from{transform:translateY(14px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+.poll-stage{margin-left:auto; background:var(--accent); border:1.5px solid var(--accent); color:#fff;
+  font-family:inherit; font-size:.84rem; font-weight:700; padding:.5rem 1.05rem; border-radius:9px; cursor:pointer;}
+.poll-stage:hover{filter:brightness(1.08);}
+.poll-stage:disabled{background:#fff; color:var(--muted); border-color:var(--line); cursor:default; filter:none;}
+.poll-stage ~ .poll-reveal,.poll-stage ~ .poll-reset{margin-left:.6rem;}
 .poll-answer{display:flex; justify-content:center; align-items:center; text-align:center;
   max-width:1060px; width:100%; margin:0 auto clamp(.4rem,1.4vh,.9rem); min-height:0;}
 .poll-answer[hidden]{display:none;}
@@ -1257,9 +1266,9 @@ img.bleed{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
       <h2 class="heading">Upcoming Assignments</h2>
       <p class="an-sub">Here's what's on deck. Check Canvas for full instructions and submission links.</p>
     </div>
-    <div class="an-list"><div class="an-row"><span class="an-num">1</span><div class="an-main"><div class="an-name">InQuizitive: How to Use InQuizitive</div><div class="an-detail">Norton's adaptive practice tool — start here to learn how InQuizitive works.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div><div class="an-row"><span class="an-num">2</span><div class="an-main"><div class="an-name">InQuizitive: Chapter 1</div><div class="an-detail">Adaptive practice covering this chapter's key concepts.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div><div class="an-row"><span class="an-num">3</span><div class="an-main"><div class="an-name">Introduce Yourself in Video</div><div class="an-detail">Record and post a short video introduction for the class.</div></div><div class="an-due tba"><span class="an-due-lbl">Due</span><span class="an-due-val">TBA</span></div></div></div>
+    <div class="an-list"><div class="an-row"><span class="an-num">1</span><div class="an-main"><div class="an-name">InQuizitive: How to Use InQuizitive</div><div class="an-detail">Norton's adaptive practice tool — start here to learn how InQuizitive works.</div></div></div><div class="an-row"><span class="an-num">2</span><div class="an-main"><div class="an-name">InQuizitive: Chapter 1</div><div class="an-detail">Adaptive practice covering this chapter's key concepts.</div></div></div><div class="an-row"><span class="an-num">3</span><div class="an-main"><div class="an-name">Introduce Yourself in Video</div><div class="an-detail">Record and post a short video introduction for the class.</div></div></div></div>
     <p class="an-note">Due dates to be announced — mark your calendar once they're posted.</p>
-    <div class="an-att" data-at-bar hidden><button class="an-att-btn" type="button" data-at-open>Attendance</button><select class="an-att-sel" data-at-section aria-label="Class section"><option value="MWF0905">MWF 9:05 am</option><option value="MWF1220">MWF 12:20 pm</option><option value="TTH1200">TTh 12:00 pm</option></select><button class="an-att-btn go" type="button" data-at-finalize hidden>Submit Attendance</button><button class="an-att-cancel" type="button" data-at-cancel hidden>Cancel</button><span class="an-att-status" data-at-status></span></div>
+    <div class="an-att" data-at-bar hidden><button class="an-att-btn" type="button" data-at-open>Attendance</button><select class="an-att-sel" data-at-section aria-label="Class section"><option value="MWF0905">MWF 9:05 am</option><option value="MWF1220">MWF 12:20 pm</option><option value="TTH1200">TTh 12:00 pm</option></select><button class="an-att-btn go" type="button" data-at-finalize hidden>Submit Attendance</button><button class="an-att-cancel" type="button" data-at-cancel hidden>Cancel</button><button class="an-att-cancel" type="button" data-at-clear hidden>Clear last roll call</button><span class="an-att-status" data-at-status></span></div>
   </div>
   <div class="footer">© 2023 W. W. Norton &amp; Company, Inc.</div>
 </section>
@@ -3644,12 +3653,13 @@ show(start);
     }
 
     let collapseReveal = function(){};  // set below if this poll has a reveal-able answer
+    let rewindStage = function(){};     // set below if this poll reveals options one at a time
 
     if(HOST){
       sec.classList.add('host');
       hintEl.textContent='Live results — students vote on their own screens.';
       resetBtn.hidden=false;
-      resetBtn.addEventListener('click', ()=>{ if(confirm('Reset all results for this question?')){ backend.reset('polls',id); collapseReveal(); } });
+      resetBtn.addEventListener('click', ()=>{ if(confirm('Reset all results for this question?')){ backend.reset('polls',id); collapseReveal(); rewindStage(); } });
     } else {
       lockIfVoted();
       opts.forEach(function(b,i){
@@ -3691,6 +3701,57 @@ show(start);
         revealBtn.hidden=false;
         revealBtn.addEventListener('click', ()=>setReveal(!shown));
         collapseReveal = ()=>setReveal(false);  // let "Reset results" also hide the answer
+      }
+    }
+
+    // optional STAGED options: the instructor uncovers one answer at a time and
+    // the stage index rides the same poll document, so every open copy of the
+    // deck reveals in step with the projector.
+    if(sec.dataset.pollStaged==='1'){
+      const stageBtn=sec.querySelector('[data-poll-stage]');
+      let stage=0, want=1;   // `want` is the host's own count, so pressing the
+                             // clicker fast never waits on a round trip
+      function applyStage(k){
+        k=Math.max(1, Math.min(n, k||1));
+        const grew = k>stage;
+        opts.forEach(function(b,i){
+          const pending = i>=k;
+          b.classList.toggle('pending', pending);
+          b.setAttribute('aria-hidden', pending?'true':'false');
+          if(grew && !pending && i>=stage){
+            b.classList.add('just-in');
+            setTimeout(()=>b.classList.remove('just-in'), 400);
+          }
+        });
+        stage=k;
+        if(stageBtn){
+          stageBtn.disabled = stage>=n;
+          stageBtn.textContent = stage>=n ? 'All options showing' : 'Show next option ('+stage+'/'+n+')';
+        }
+      }
+      applyStage(1);
+      backend.subscribeDoc('polls', id, function(d){
+        let k=(d&&d.stage)||1;
+        if(HOST) k=Math.max(k, want);   // don't let a stale snapshot re-cover an option
+        applyStage(k);
+      });
+      if(HOST){
+        stageBtn.hidden=false;
+        const bump=function(){
+          if(want>=n) return;
+          want++; applyStage(want); backend.mergeDoc('polls', id, {stage: want});
+        };
+        stageBtn.addEventListener('click', bump);
+        rewindStage = function(){ want=1; applyStage(1); backend.mergeDoc('polls', id, {stage:1}); };
+        // the clicker: while options are still covered, → / space / PageDown
+        // uncovers the next one instead of leaving the slide.
+        document.addEventListener('keydown', function(e){
+          if(!sec.classList.contains('active') || want>=n) return;
+          if(e.key!=='ArrowRight' && e.key!==' ' && e.key!=='PageDown') return;
+          const t=e.target, tag=t&&t.tagName;
+          if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)) return;
+          e.preventDefault(); e.stopPropagation(); bump();
+        }, true);
       }
     }
 
@@ -6467,47 +6528,42 @@ show(start);
         try{ localStorage.setItem(doneKey(),'1'); }catch(e){}
         backend.mergeDocShard('polls', id, {n: backend.inc(1)});
         modal.querySelector('[data-at-donesub]').textContent = warn ||
-          ('A confirmation email is on its way to '+em+'.');
+          ('Your instructor has you on the roster. A confirmation email follows shortly.');
         formBox.hidden=true; doneBox.hidden=false;
       }
+      function fail(msg){
+        sendBtn.disabled=false; sendBtn.textContent='Submit';
+        msgEl.className='at-msg err'; msgEl.textContent=msg;
+      }
       if(!URL_){ finish('Recorded locally — your instructor has not finished setting up the attendance link yet.'); return; }
-      // text/plain keeps this a CORS "simple request" (no preflight), which is what
-      // an Apps Script web app accepts. If CORS still blocks, retry opaque so the
-      // row is written even though we cannot read the reply.
-      fetch(URL_, {method:'POST', mode:'cors', redirect:'follow',
-                   headers:{'Content-Type':'text/plain;charset=utf-8'},
-                   body:JSON.stringify(payload)})
-        .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status);
-                           return r.json().catch(function(){ return {ok:true}; }); })
-        .then(function(j){
-          if(j && j.ok===false){
-            // the server understood us and said no — a retry would not help, and
-            // silently "succeeding" would tell the student they are marked present
-            // when no row was written
-            const e=new Error(j.error||'rejected'); e.rejected=true; throw e;
-          }
-          finish(null);
-        })
-        .catch(function(err){
-          if(err && err.rejected){
-            sendBtn.disabled=false; sendBtn.textContent='Submit';
-            msgEl.className='at-msg err';
-            msgEl.textContent='Not recorded — the attendance server said: '+err.message+
-                              '. Please tell your instructor.';
-            return;
-          }
-          // network/CORS failure: we cannot read the reply, so send it blind rather
-          // than block a student who really did submit
-          return fetch(URL_, {method:'POST', mode:'no-cors',
-                              headers:{'Content-Type':'text/plain;charset=utf-8'},
-                              body:JSON.stringify(payload)})
-            .then(function(){ finish(null); })
-            .catch(function(){
-              sendBtn.disabled=false; sendBtn.textContent='Submit';
-              msgEl.className='at-msg err';
-              msgEl.textContent='Could not reach the attendance server. Check your connection and try again.';
-            });
-        });
+
+      // A roll call is a thundering herd: 300 browsers POST at once and Apps
+      // Script only runs ~30 at a time. So spread the first attempt over a few
+      // seconds, then back off — and NEVER claim success we have not been told
+      // about: the count on the slide has to mean "a row was written".
+      const TRIES=5, WAITS=[1500, 3500, 7000, 12000];
+      function attempt(k){
+        sendBtn.textContent = k===1 ? 'Sending…' : 'Still trying… ('+k+' of '+TRIES+')';
+        fetch(URL_, {method:'POST', mode:'cors', redirect:'follow',
+                     headers:{'Content-Type':'text/plain;charset=utf-8'},
+                     body:JSON.stringify(payload)})
+          .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+          .then(function(j){
+            if(j && j.ok===true){ finish(null); return; }
+            // the server understood us and said no — retrying cannot help
+            const e=new Error((j&&j.error)||'rejected'); e.rejected=true; throw e;
+          })
+          .catch(function(err){
+            if(err && err.rejected){
+              fail('Not recorded — the attendance server said: '+err.message+'. Please tell your instructor.');
+              return;
+            }
+            if(k<TRIES){ setTimeout(function(){ attempt(k+1); }, WAITS[k-1]+Math.random()*800); return; }
+            fail('Could not reach the attendance server after several tries. Please press Submit again.');
+          });
+      }
+      sendBtn.textContent='Sending…';
+      setTimeout(function(){ attempt(1); }, Math.random()*4000);
     }
     sendBtn.addEventListener('click', send);
 
@@ -6557,6 +6613,17 @@ show(start);
       cancelBtn.addEventListener('click', function(){
         backend.mergeDoc('polls', id, {open:0});
       });
+      // optional: wipe the last roll call so the slide is clean for the next class
+      const clearBtn=sec.querySelector('[data-at-clear]');
+      if(clearBtn){
+        clearBtn.hidden=false;
+        clearBtn.addEventListener('click', function(){
+          if(!confirm('Clear the last roll call from this slide?\n\n(The roster that was emailed is unaffected.)')) return;
+          backend.setDoc('polls', id, {open:0, session:'', n:0, sec:'', secLabel:''});
+          try{ Object.keys(localStorage).forEach(function(k){
+            if(k.indexOf('att-done:'+id+':')===0) localStorage.removeItem(k); }); }catch(e){}
+        });
+      }
       finBtn.addEventListener('click', function(){
         backend.mergeDoc('polls', id, {open:0});
         if(!URL_){ alert('No attendance link is configured yet — see ATTENDANCE-SETUP.md.'); return; }

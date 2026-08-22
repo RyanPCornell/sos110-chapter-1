@@ -70,9 +70,10 @@ setup reminder instead of collecting.
 
 ## Announcements slide
 
-Slide 3 lists upcoming assignments with **TBA** due-date chips. To fill in real
-dates, edit the `ASSIGNMENTS` list near the top of `_deck-builder/chapter1.py`
-and re-build (see below).
+Slide 3 lists upcoming assignments. Entries carry no due date unless one is set —
+to add dates, fill in the `due` field in the `ASSIGNMENTS` list near the top of
+`_deck-builder/chapter1.py` and re-build (see below); a date chip then appears on
+that row.
 
 ## Re-building this bundle
 
