@@ -68,6 +68,18 @@ setup reminder instead of collecting.
 > into your Google Sheet. They are **never** written to Firestore, whose rules are
 > world-readable — only an anonymous submission count syncs there.
 
+## How-to-find-InQuizitive slide (4)
+
+A four-step walkthrough on one slide: Canvas screen recording → annotated Modules
+screenshot → annotated InQuizitive screenshot → ebook screen recording. **Each
+press of the clicker advances one step**; the press after the last step moves on
+to slide 5, and going backwards mirrors that. Step dots at the bottom left are
+clickable, and tapping the picture also advances.
+
+Videos are H.264 MP4. The originals were `.mov`, and the Canvas one was HEVC —
+which Chrome on Windows and Firefox will not play at all. They autoplay muted and
+loop while their step is showing.
+
 ## Announcements slide
 
 Slide 3 lists upcoming assignments. Entries carry no due date unless one is set —
